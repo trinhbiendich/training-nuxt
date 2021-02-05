@@ -41,9 +41,10 @@ export default {
       //   this.planets = res.wait5Second;
       // });
 
-
-      this.mountains = await fetch('https://test.opencms.codes/cake/api/articles/mountains').then(res => res.json());
-      this.planets = await fetch('https://test.opencms.codes/cake/api/articles/planets').then(res => res.json());
+      let res1 = await fetch('https://test.opencms.codes/cake/api/articles/mountains');
+      let res2 = await fetch('https://test.opencms.codes/cake/api/articles/planets');
+      this.mountains = (await res1.json()).data;
+      this.planets = (await res2.json()).data;
 
     }
   }
