@@ -23,7 +23,8 @@ export default {
   methods: {
     async fetchPageInfo() {
       let pathMatch = this.$route.params.pathMatch;
-      let res = await fetch(`https://test.opencms.codes/cake/api/sites/${pathMatch}`);
+      let url = `https://test.opencms.codes/cake/api/sites/${pathMatch}`;
+      let res = await fetch(url);
       let data = await res.json();
       if (data.type === "success") {
         console.log(data);
