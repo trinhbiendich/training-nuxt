@@ -6,9 +6,9 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav v-for="item in links">
-        <b-nav-item v-if="!hasChild(item)" :to="correctPath('articles', item.path)">{{item.text}}</b-nav-item>
+        <b-nav-item v-if="!hasChild(item)" :to="correctPath(item.path)">{{item.text}}</b-nav-item>
         <b-nav-item-dropdown v-else :text="item.text">
-          <b-dropdown-item v-for="child in item.children" :to="correctPath('articles', item.path, child.path)">{{ child.text }}</b-dropdown-item>
+          <b-dropdown-item v-for="child in item.children" :to="correctPath(item.path, child.path)">{{ child.text }}</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
 

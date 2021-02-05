@@ -52,12 +52,11 @@ export default {
   ssr: false,
   //target: 'staticx',
   router: {
-    //base: '/training-nuxt/',
+    base: '/training-nuxt/',
     extendRoutes(routes, resolve) {
       routes.push({
-        path: '/articles/*',
-        component: resolve(__dirname, 'pages/AdminManager'),
-        modal: resolve(__dirname, 'components/modal.vue')
+        path: '/*',
+        component: resolve(__dirname, 'pages/index')
       })
     }
   },
