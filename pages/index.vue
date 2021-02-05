@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <NuxtLink to="/">{{this.pageInfo.title}}</NuxtLink>
+    <Logo />
   </div>
 </template>
 
