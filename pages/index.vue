@@ -6,7 +6,10 @@
 </template>
 
 <script>
-export default {}
+import Logo from "~/components/Logo";
+export default {
+  components: {Logo}
+}
 </script>
 
 <style scoped>
