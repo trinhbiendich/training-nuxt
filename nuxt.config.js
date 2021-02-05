@@ -45,9 +45,12 @@ export default {
     port: 6969
   },
 
-  buildDir: 'docs',
-
   ssr: false,
+
+  target: 'staticx',
+  router: {
+    base: '/training-nuxt/'
+  },
 
   serverMiddleware: ['~/server-middleware/logger']
 }
