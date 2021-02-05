@@ -52,7 +52,7 @@ export default {
   ssr: false,
   //target: 'staticx',
   router: {
-    base: '/training-nuxt/',
+    //base: '/training-nuxt/',
     extendRoutes(routes, resolve) {
       routes.push({
         path: '/*',
