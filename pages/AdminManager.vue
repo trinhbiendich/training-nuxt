@@ -1,10 +1,10 @@
 <template>
-  <h1>Add new user </h1>
+  <div>{{$route.params}} {{$route.query}}</div>
 </template>
 
 <script>
 export default {
-  name: "add-new"
+  name: "AdminManager"
 }
 </script>
 

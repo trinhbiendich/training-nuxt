@@ -35,6 +35,10 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    // Doc: https://bootstrap-vue.js.org/docs/
+    "bootstrap-vue/nuxt",
+    // Doc: https://github.com/nuxt-community/style-resources-module
+    "@nuxtjs/style-resources"
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
@@ -45,12 +49,24 @@ export default {
     port: 6969
   },
 
-  ssr: false,
-
-  target: 'staticx',
+  //ssr: false,
+  //target: 'staticx',
   router: {
-    base: '/training-nuxt/'
+  //   base: '/training-nuxt/'
+    extendRoutes(routes, resolve) {
+      routes.push({
+        path: '/articles/*',
+        component: resolve(__dirname, 'pages/AdminManager'),
+        modal: resolve(__dirname, 'components/modal.vue')
+      })
+    }
   },
 
-  serverMiddleware: ['~/server-middleware/logger']
+  styleResources: {
+    scss: "./assets/scss/*.scss"
+  },
+
+  serverMiddleware: [
+    '~/server-middleware/logger'
+  ]
 }

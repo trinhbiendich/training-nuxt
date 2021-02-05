@@ -10,9 +10,13 @@
     "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
+    "@nuxtjs/style-resources": "^1.0.0",
+    "bootstrap": "^4.6.0",
+    "bootstrap-vue": "^2.21.2",
     "core-js": "^3.8.3",
     "nuxt": "^2.14.12",
-    "rxjs": "^6.6.3"
+    "rxjs": "^6.6.3",
+    "vue": "^2.6.12"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^3.4.2",
