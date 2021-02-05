@@ -5,10 +5,10 @@
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav v-for="item in links">
+      <b-navbar-nav v-for="item in links" v-bind:key="item.path">
         <b-nav-item v-if="!hasChild(item)" :to="correctPath(item.path)">{{item.text}}</b-nav-item>
         <b-nav-item-dropdown v-else :text="item.text">
-          <b-dropdown-item v-for="child in item.children" :to="correctPath(item.path, child.path)">{{ child.text }}</b-dropdown-item>
+          <b-dropdown-item v-for="child in item.children" v-bind:key="child.path" :to="correctPath(item.path, child.path)">{{ child.text }}</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
 
