@@ -49,7 +49,7 @@ export default {
     port: 6969
   },
 
-  //ssr: false,
+  ssr: false,
   //target: 'staticx',
   router: {
     //base: '/training-nuxt/',
