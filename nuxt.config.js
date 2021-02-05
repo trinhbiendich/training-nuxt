@@ -49,10 +49,10 @@ export default {
     port: 6969
   },
 
-  //ssr: false,
+  ssr: false,
   //target: 'staticx',
   router: {
-  //   base: '/training-nuxt/'
+    base: '/training-nuxt/',
     extendRoutes(routes, resolve) {
       routes.push({
         path: '/articles/*',

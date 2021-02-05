@@ -18,8 +18,13 @@
 <script>
 export default {
   name: "Header",
-  created() {
+  beforeCreate() {
+  },
+  mounted() {
     this.fetchMenus();
+  },
+  created() {
+
   },
   data() {
     return {
@@ -28,7 +33,8 @@ export default {
   },
   methods: {
     async fetchMenus() {
-      let data = await fetch('https://test.opencms.codes/cake/api/menu').then(res => res.json());
+      let res = await fetch('https://test.opencms.codes/cake/api/menu');
+      let data = await res.json();
       if (data.type === "success") {
         this.links = data.data;
       }
