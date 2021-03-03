@@ -1,11 +1,19 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="info">
-    <b-navbar-brand to="/">Training NuxtJs</b-navbar-brand>
+    <b-navbar-brand to="/">OpenCms</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav v-for="item in links" v-bind:key="item.path">
+      <b-navbar-nav>
+        <b-nav-item-dropdown text="Harmonica">
+          <b-dropdown-item :to="correctPath('harmonica', 'tremolo24')">Tremolo 24</b-dropdown-item>
+          <b-dropdown-item :to="correctPath('harmonica', 'diatonic10')">Diatonic 10</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+
+
+      <b-navbar-nav v-if="false" v-for="item in links" v-bind:key="item.path">
         <b-nav-item v-if="!hasChild(item)" :to="correctPath(item.path)">{{item.text}}</b-nav-item>
         <b-nav-item-dropdown v-else :text="item.text">
           <b-dropdown-item v-for="child in item.children" v-bind:key="child.path" :to="correctPath(item.path, child.path)">{{ child.text }}</b-dropdown-item>
@@ -55,7 +63,7 @@ export default {
   },
   methods: {
     async fetchMenus() {
-      let res = await fetch('https://test.opencms.codes/cake/api/menu');
+      let res = await fetch('https://api.opencms.codes/menu');
       let data = await res.json();
       if (data.type === "success") {
         this.links = data.data;

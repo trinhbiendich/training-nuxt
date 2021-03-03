@@ -7,8 +7,6 @@
 
 <script>
 import ListArticle from "@/components/ListArticle";
-import {forkJoin} from "rxjs";
-import {ajax} from "rxjs/ajax";
 
 export default {
   components: {ListArticle},
@@ -33,16 +31,8 @@ export default {
   },
   methods :{
     async fetchXXX() {
-      // forkJoin({
-      //   wait2Second: ajax.getJSON('https://opencms.codes/api/?name=mountains&wait=2'),
-      //   wait5Second: ajax.getJSON('https://opencms.codes/api/?name=planets&wait=5')
-      // }).subscribe(res => {
-      //   this.mountains = res.wait2Second;
-      //   this.planets = res.wait5Second;
-      // });
-
-      let res1 = await fetch('https://test.opencms.codes/cake/api/articles/mountains');
-      let res2 = await fetch('https://test.opencms.codes/cake/api/articles/planets');
+      let res1 = await fetch('https://api.opencms.codes/articles/mountains');
+      let res2 = await fetch('https://api.opencms.codes/articles/planets');
       this.mountains = (await res1.json()).data;
       this.planets = (await res2.json()).data;
 

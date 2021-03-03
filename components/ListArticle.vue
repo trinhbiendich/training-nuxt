@@ -22,6 +22,11 @@ export default {
   },
   mounted() {
     console.log(this.moduleName, this.data);
+  },
+  methods: {
+    test() {
+
+    }
   }
 }
 </script>

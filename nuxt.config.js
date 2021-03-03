@@ -54,10 +54,14 @@ export default {
   router: {
     //base: '/training-nuxt/',
     extendRoutes(routes, resolve) {
-      routes.push({
-        path: '/*',
-        component: resolve(__dirname, 'pages/index')
-      })
+      // routes.push({
+      //   path: '/harmonica',
+      //   component: resolve(__dirname, 'pages/index')
+      // })
+      // routes.push({
+      //   path: '/*',
+      //   component: resolve(__dirname, 'pages/index')
+      // })
     }
   },
 
