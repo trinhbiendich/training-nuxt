@@ -12,6 +12,7 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
@@ -23,7 +24,7 @@ export default {
     updateInfo (event, req) {
       let elem = event.target
       let textVal = elem.value
-      if (textVal === undefined || textVal === '') {
+      if (textVal === undefined || textVal === '' || textVal.length < 40) {
         return
       }
       const nodes = [
@@ -31,6 +32,7 @@ export default {
         "Đô", "Rê", "Mi", "Fa", "Sol", "La", "Đố", "Si", "Mí",
         "Rế", "Sól", "Fá", "Đốố", "Lá", "Míí", "Sí"
       ]
+
       this.convertedText = textVal.split('\n').map((item, idx) => {
         return item.split(' ')
           .map((node, idxNode) => {

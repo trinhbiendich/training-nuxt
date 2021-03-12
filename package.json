@@ -14,12 +14,15 @@
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.8.3",
+    "crypt-js": "^1.0.4",
     "nuxt": "^2.14.12",
     "rxjs": "^6.6.3",
+    "sass-loader": "10",
     "vue": "^2.6.12"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^3.4.2",
+    "crypto-js": "^4.0.0",
     "push-dir": "^0.4.1"
   }
 }
