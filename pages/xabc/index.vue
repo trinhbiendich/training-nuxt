@@ -1,10 +1,11 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
-      <div class="col-3">
+      <div class="col-xs-12 col-md-4 col-lg-3">
         <span class="menu-item" v-for="path in paths" @click="loadData(path)">{{path}}</span>
       </div>
-      <div class="col-9">
+      <div class="col-xs-12 col-md-8 col-lg-9">
+        <div v-for="img in imgs" class="img-item"><img :src="img" /></div>
       </div>
     </div>
   </div>
@@ -18,7 +19,8 @@ export default {
   data() {
     return {
       paths: [],
-      mystyle: {width: '0px'}
+      mystyle: {width: '0px'},
+      imgs: []
     }
   },
   computed: {
@@ -30,7 +32,34 @@ export default {
       let res = await fetch(url)
       let data = await res.json()
       if (data.type === "success") {
-        console.log(data.data)
+        let fetches = []
+        for(let k in data.data) {
+          if (k === 'links') {
+            continue
+          }
+          fetches.push(fetch(`https://api.opencms.codes/${base_path}_${k}`)
+                                  .then(res => res.ok && res.json() || Promise.reject(res)))
+          if (fetches.length >=10) {
+            break
+          }
+        }
+
+        if (fetches.length > 0) {
+          Promise.all(fetches).then(data => {
+            let tmpImgs = []
+            for(let i=0; i<data.length; i++) {
+              let itemData = data[i].data
+              for(let imgIdx=0; imgIdx < itemData.imgs.length; imgIdx++) {
+                let imgUrl = itemData.imgs[imgIdx]
+                if (tmpImgs.indexOf(imgUrl) < 0) {
+                  tmpImgs.push(imgUrl)
+                }
+              }
+            }
+            this.imgs = tmpImgs
+            console.log(this.imgs)
+          })
+        }
       }
     },
     async fetchPaths() {
@@ -54,5 +83,6 @@ export default {
   padding: 5px;
   border-bottom: 1px dotted gray;
   text-decoration: none;
+  cursor: pointer;
 }
 </style>
