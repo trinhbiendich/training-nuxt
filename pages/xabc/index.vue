@@ -37,7 +37,7 @@ export default {
       let data = await res.json()
       if (data.type === "success") {
         this.paths = data.data //.filter((item, idx) => item  === "test")
-        await this.loadData(this.paths[0])
+        //await this.loadData(this.paths[0])
       }
     }
   },
