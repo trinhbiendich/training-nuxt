@@ -50,6 +50,10 @@ export default {
       {
         src: "https://test.opencms.codes/vendor/colorbox/jquery.colorbox-min.js",
         type: "text/javascript"
+      },
+      {
+        src: "/fb-sdk.js",
+        type: "text/javascript"
       }
     ]
   },
@@ -61,6 +65,10 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
   ],
+
+  static: {
+    prefix: false
+  },
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
