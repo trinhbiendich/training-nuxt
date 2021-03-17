@@ -57,9 +57,6 @@ export default {
           }
           fetches.push(fetch(`https://api.opencms.codes/${base_path}_${k}`)
             .then(res => res.ok && res.json() || Promise.reject(res)))
-          if (fetches.length >=10) {
-            break
-          }
         }
 
         if (fetches.length > 0) {
