@@ -32,8 +32,7 @@ jobs:
         uses: garygrossgarten/github-action-ssh@v0.6.3
         with:
           command: ls -a
-          host: ${{ secrets.HOST }}
-          username: garygrossgarten
-          passphrase: ${{ secrets.PASSPHRASE }}
-          privateKey: ${{ secrets.PRIVATE_KEY}}
+          host: ${{ secrets.HOST_X }}
+          username: ${{ secrets.USERNAME_X }}
+          password: ${{ secrets.PASSWORD_X }}
 
