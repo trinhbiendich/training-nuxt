@@ -1,4 +1,4 @@
-name: Build server to DEST file
+name: Build server to gh-pages
 
 on: [push, pull_request]
 
