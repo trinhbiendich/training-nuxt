@@ -1,4 +1,4 @@
-name: cd
+name: Build server to DEST file
 
 on: [push, pull_request]
 
