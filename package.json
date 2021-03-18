@@ -11,8 +11,6 @@
   },
   "dependencies": {
     "@nuxtjs/style-resources": "^1.0.0",
-    "bootstrap": "^4.6.0",
-    "bootstrap-vue": "^2.21.2",
     "core-js": "^3.8.3",
     "crypt-js": "^1.0.4",
     "jquery": "^3.6.0",
