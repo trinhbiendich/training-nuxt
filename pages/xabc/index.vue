@@ -51,8 +51,6 @@ export default {
       }
     }
   },
-  render(createElement, context) {
-  },
   methods: {
     isTest (item) {
       return ['test', 'test2'].indexOf(item) >= 0
