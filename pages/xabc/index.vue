@@ -55,6 +55,17 @@ export default {
     isTest (item) {
       return ['test', 'test2'].indexOf(item) >= 0
     },
+    shuffle(array) {
+      let currentIndex = array.length, temporaryValue, randomIndex;
+      while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+      return array;
+    },
     async loadData (base_path) {
       console.log(base_path)
 
@@ -67,12 +78,20 @@ export default {
       let data = await res.json()
       if (data.type === "success") {
         let fetches = []
+        let keys = []
         for(let k in data.data) {
           if (k === 'links') {
             continue
           }
+          keys.push(k)
           this.totallinks++;
-          fetches.push(fetch(`https://api.opencms.codes/${base_path}_${k}`)
+        }
+        keys = this.shuffle(keys)
+        if (keys.length >= 20) {
+          keys = keys.slice(0, 20)
+        }
+        keys.forEach((keyValue, idx) => {
+          fetches.push(fetch(`https://api.opencms.codes/${base_path}_${keyValue}`)
             .then(res => {
               if (res.ok) {
                 return res.json()
@@ -80,7 +99,7 @@ export default {
                 Promise.reject(res)
               }
             }))
-        }
+        })
 
         if (fetches.length > 0) {
           this.imgs = []
