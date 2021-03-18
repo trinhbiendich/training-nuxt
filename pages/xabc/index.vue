@@ -2,10 +2,13 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-xs-12 col-md-4 col-lg-3">
-        <span class="menu-item" v-for="path in paths" @click="loadData(path)">{{path}}</span>
+        <a class="menu-item" href="javascript:;" v-for="path in paths" @click="loadData(path)">{{path}}</a>
       </div>
-      <div id="myGallery" class="col-xs-12 col-md-8 col-lg-9">
-        <a v-for="img in imgs" :href="img" class="img-item"><img class="img-fluid lazy" :src="img" /></a>
+      <div class="col-xs-12 col-md-8 col-lg-9">
+        <div>{{totallinks}} links in path <i>{{curPath}}</i> found {{totalImgs}} images</div>
+        <div id="myGallery">
+          <a v-for="img in imgs" :href="img" class="img-item"><img class="img-fluid lazy" :src="img" /></a>
+        </div>
       </div>
     </div>
   </div>
@@ -13,15 +16,22 @@
 
 <script>
 export default {
-  mounted() {
-    this.fetchPaths
-  },
-
   data() {
     return {
       paths: [],
       mystyle: {width: '0px'},
-      imgs: []
+      imgs: [],
+      totallinks: 0,
+      curPath: '',
+      totalImgs: 0,
+      imgHeight: 300
+    }
+  },
+  mounted() {
+    this.fetchPaths
+    this.imgHeight = 300
+    if (this.isMobile) {
+      this.imgHeight = 150
     }
   },
   computed: {
@@ -37,26 +47,38 @@ export default {
       let data = await res.json()
       if (data.type === "success") {
         this.paths = data.data //.filter((item, idx) => item  === "test")
-        //await this.loadData(this.paths[0])
+        await this.loadData(this.paths[0])
       }
     }
   },
-
+  render(createElement, context) {
+  },
   methods: {
     async loadData (base_path) {
       console.log(base_path)
+
+      this.curPath = base_path
+      this.totallinks = 0
+      this.totalImgs = 0
+
       let url = `https://api.opencms.codes/${base_path}`
       let res = await fetch(url)
       let data = await res.json()
       if (data.type === "success") {
-        console.log(base_path)
         let fetches = []
         for(let k in data.data) {
           if (k === 'links') {
             continue
           }
+          this.totallinks++;
           fetches.push(fetch(`https://api.opencms.codes/${base_path}_${k}`)
-            .then(res => res.ok && res.json() || Promise.reject(res)))
+            .then(res => {
+              if (res.ok) {
+                return res.json()
+              } else {
+                Promise.reject(res)
+              }
+            }))
         }
 
         if (fetches.length > 0) {
@@ -68,27 +90,25 @@ export default {
                 let imgUrl = itemData.imgs[imgIdx]
                 if (tmpImgs.indexOf(imgUrl) < 0) {
                   tmpImgs.push(imgUrl)
+                  this.totalImgs++
                 }
               }
             }
             this.imgs = tmpImgs
 
-            let height = 300
-            if (this.isMobile) {
-              height = 150
-            }
-
-            $('#myGallery').justifiedGallery({
-              rowHeight : height,
-              lastRow : 'nojustify',
-              margins : 3
-            }).on('jg.complete', function () {
-              $(this).find('a').colorbox({
-                maxWidth : '80%',
-                maxHeight : '80%',
-                opacity : 0.8,
-                transition : 'elastic',
-                current : ''
+            this.$nextTick(() => {
+              $('#myGallery').justifiedGallery({
+                rowHeight : this.imgHeight,
+                lastRow : 'nojustify',
+                margins : 3
+              }).on('jg.complete', function () {
+                $(this).find('a').colorbox({
+                  maxWidth : '80%',
+                  maxHeight : '80%',
+                  opacity : 0.8,
+                  transition : 'elastic',
+                  current : ''
+                })
               })
             })
           })
