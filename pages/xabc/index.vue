@@ -46,14 +46,17 @@ export default {
       let res = await fetch(url)
       let data = await res.json()
       if (data.type === "success") {
-        this.paths = data.data //.filter((item, idx) => item  === "test")
-        await this.loadData(this.paths[0])
+        this.paths = data.data .filter((item, idx) => !this.isTest(item))
+        //await this.loadData(this.paths[0])
       }
     }
   },
   render(createElement, context) {
   },
   methods: {
+    isTest (item) {
+      return ['test', 'test2'].indexOf(item) >= 0
+    },
     async loadData (base_path) {
       console.log(base_path)
 
@@ -82,19 +85,18 @@ export default {
         }
 
         if (fetches.length > 0) {
+          this.imgs = []
           Promise.all(fetches).then(data => {
-            let tmpImgs = []
             for(let i=0; i<data.length; i++) {
               let itemData = data[i].data
               for(let imgIdx=0; imgIdx < itemData.imgs.length; imgIdx++) {
                 let imgUrl = itemData.imgs[imgIdx]
-                if (tmpImgs.indexOf(imgUrl) < 0) {
-                  tmpImgs.push(imgUrl)
+                if (this.imgs.indexOf(imgUrl) < 0) {
+                  this.imgs.push(imgUrl)
                   this.totalImgs++
                 }
               }
             }
-            this.imgs = tmpImgs
 
             this.$nextTick(() => {
               $('#myGallery').justifiedGallery({
