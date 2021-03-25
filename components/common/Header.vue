@@ -10,6 +10,8 @@
           <b-dropdown-item :to="correctPath('harmonica', 'tremolo24')">Tremolo 24</b-dropdown-item>
           <b-dropdown-item :to="correctPath('harmonica', 'diatonic10')">Diatonic 10</b-dropdown-item>
         </b-nav-item-dropdown>
+
+        <b-nav-item :to="correctPath('images')">Images</b-nav-item>
       </b-navbar-nav>
 
 
