@@ -106,6 +106,12 @@ export default {
           Promise.all(fetches).then(data => {
             for(let i=0; i<data.length; i++) {
               let itemData = data[i].data
+              if (itemData === undefined || itemData === null) {
+                continue
+              }
+              if (itemData.imgs === undefined || itemData.imgs === null || itemData.imgs.length === 0) {
+                continue
+              }
               for(let imgIdx=0; imgIdx < itemData.imgs.length; imgIdx++) {
                 let imgUrl = itemData.imgs[imgIdx]
                 if (this.imgs.indexOf(imgUrl) < 0) {
