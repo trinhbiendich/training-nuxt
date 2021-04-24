@@ -62,6 +62,7 @@ export default {
       waitUsers: {},
       deleteUsers: {},
       doneUsers: {},
+      allUsers: {},
     }
   },
   mounted() {
@@ -86,6 +87,12 @@ export default {
           return
         }
         this.doneUsers = res.data.data
+      })
+      this.$axios.get('/users_all').then(res => {
+        if (res.data.type === 'error') {
+          return
+        }
+        this.allUsers = res.data.data
       })
     },
     refreshObjExceptThis (user, users) {
@@ -146,14 +153,27 @@ export default {
       }
       this.message = ''
       let userId = this.getUserIdFromUrl(this.link.url)
-      this.$axios.$post(`/users_wait/${userId}`, {user_id: userId})
-      .then(res => {
-        this.waitUsers[userId] = {user_id: userId}
-        this.link = {
-          url: '',
-          text: ''
-        }
-      })
+      if (this.allUsers[userId] !== undefined) {
+        this.message = 'This user already on the server'
+        return
+      }
+      let user = {
+        user_id: userId,
+        display_text: this.link.text
+      }
+      this.$axios.post(`/users_all/${userId}`, user)
+        .then(res => {
+          this.$axios.$post(`/users_wait/${userId}`, user)
+            .then(res2 => {
+              this.waitUsers[userId] = user
+              this.allUsers[userId] = user
+              this.link = {
+                url: '',
+                text: ''
+              }
+            })
+        })
+
     },
     validUrl (str) {
       if (str === '') {
