@@ -10,6 +10,9 @@
     "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@nuxtjs/axios": "^5.13.1",
     "@nuxtjs/style-resources": "^1.0.0",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.8.3",

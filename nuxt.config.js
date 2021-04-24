@@ -27,6 +27,18 @@ export default {
       {
         rel: "stylesheet",
         href: "https://test.opencms.codes/vendor/fontawesome/v5.14.0/css/pro.min.css"
+      },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/icon?family=Material+Icons"
+      },
+      {
+        rel: "stylesheet",
+        href: "/assets/style.css"
       }
     ],
 
@@ -64,6 +76,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '~/plugins/axios',
   ],
 
   static: {
@@ -79,12 +92,20 @@ export default {
     '@nuxtjs/tailwindcss',
   ],
 
+  publicRuntimeConfig: {
+    axios: {
+      baseURL: 'https://api.opencms.codes',
+      //baseURL: 'http://localhost:8765',
+    },
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // Doc: https://bootstrap-vue.js.org/docs/
     "bootstrap-vue/nuxt",
     // Doc: https://github.com/nuxt-community/style-resources-module
-    "@nuxtjs/style-resources"
+    "@nuxtjs/style-resources",
+    '@nuxtjs/axios',
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

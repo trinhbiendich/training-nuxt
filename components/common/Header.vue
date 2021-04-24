@@ -70,7 +70,7 @@ export default {
       if (data.type === "success") {
         this.links = data.data;
       }
-      console.log(this.links);
+      //console.log(this.links);
     },
     hasChild: function(item) {
       return item.children !== undefined && item.children.length > 0;
