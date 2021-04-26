@@ -4,11 +4,12 @@
     <div v-if="msg !== ''">
       <div class="alert alert-info">{{ msg }}</div>
     </div>
-    <div id="myGallery">
-      <a v-for="(img, idx) in imgs" :key="'img_' + idx" :href="img" class="img-item">
-        <img class="img-fluid lazy" :src="img" />
+    <div ref="myGallery" id="myGallery">
+      <a v-for="(img, idx) in imgs" :key="'img_' + idx" :href="urlMax(img)" class="img-item">
+        <img class="img-fluid lazy" :src="urlMin(img, 300)" />
       </a>
     </div>
+    <a class="btn btn-success" @click="loadImagesFromServer">Load more</a>
   </div>
 </template>
 
@@ -26,32 +27,114 @@ export default {
       },
       user: {},
       imgs: [],
+      photoIds: [],
       msg: '',
+      userId: '',
+      curPage: 1,
+      perPage: 50,
+      totalPage: 1,
+      curTotalImages: 0,
     }
   },
   mounted() {
-    let userId = this.$route.query.userId
-    this.pageInfo.title = 'Detail of ' + userId
-    this.$axios.$get(`/${userId}`).then(res => {
+    this.userId = this.$route.query.userId
+    this.pageInfo.title = 'Detail of ' + this.userId
+    this.$axios.$get(`/${this.userId}`).then(res => {
       if (res.type !== 'success') {
         this.msg = 'There are no images or data on this user'
         return
       }
       this.user = res.data
-      for(let photoId in this.user) {
-        this.imgs.push(this.user[photoId]['url_k'])
-      }
-      this.$nextTick(() => {
-        $('#myGallery').justifiedGallery({
-          rowHeight : 300,
-          lastRow : 'nojustify',
-          margins : 3
-        })
-      })
     })
+    this.$axios.$get(`/${this.userId}_photos`)
+      .then(res => {
+        if (res.type !== 'success') {
+          return
+        }
+        this.photoIds = res.data
+
+        this.totalPage = Math.ceil(this.photoIds.length / (this.perPage * 1.0))
+
+        this.loadImagesFromServer()
+      })
   },
   methods: {
+    loadImagesFromServer () {
+      if (this.curPage > this.totalPage) {
+        return
+      }
+      let counter = 0
+      const offset = (this.curPage - 1) * this.perPage
+      const nextOffset = offset + this.perPage
 
+      let photoIds = this.photoIds.slice(offset, nextOffset)
+      this.curPage++
+      this.curTotalImages += photoIds.length
+      photoIds.forEach((photoId, idx) => {
+        this.$axios.$get(`/${this.userId}_photos_${photoId}`)
+          .then(resOfPhoto => {
+            counter++;
+
+            this.addImage(resOfPhoto)
+
+            if (counter >= photoIds.length) {
+              this.$nextTick(() => {
+                $('#myGallery').justifiedGallery({
+                  rowHeight : 300,
+                  lastRow : 'nojustify',
+                  margins : 3
+                })
+              })
+
+            }
+          })
+      })
+    },
+    addImage (res) {
+      if (res.type !== 'success') {
+        return
+      }
+      this.imgs.push(res.data)
+    },
+    urlMin (img, minWidth = null) {
+      const types = ["sq", "q", "t", "s", "n", "w", "m", "z", "c", "l", "h", "o"]
+
+      for(let i=0; i<types.length; i++) {
+        let type = types[i]
+        if (img[`url_${type}`] === undefined) {
+          continue
+        }
+
+        if (minWidth !== null && img[`width_${type}`] < minWidth) {
+          continue
+        }
+
+        if (img[`url_${type}`] !== undefined) {
+          return img[`url_${type}`]
+        }
+      }
+
+      return '/images/no-image.png'
+    },
+    urlMax (img, maxWidth = null) {
+      const types = ["sq", "q", "t", "s", "n", "w", "m", "z", "c", "l", "h", "o"].reverse()
+
+      for(let i=0; i<types.length; i++) {
+        let type = types[i]
+        if (img[`url_${type}`] === undefined) {
+          continue
+        }
+
+        if (maxWidth !== null && img[`width_${type}`] > maxWidth) {
+          continue
+        }
+
+        if (img[`url_${type}`] !== undefined) {
+          return img[`url_${type}`]
+        }
+      }
+      return '/images/no-image.png'
+    }
   },
 }
 </script>

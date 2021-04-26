@@ -1,7 +1,9 @@
 <template>
   <div class="row">
     <div class="col-9">
-      <nuxt-link :to="{ path: '/flickr/detail', query: { userId: user.user_id }}">{{ user.user_id }}</nuxt-link>
+      <nuxt-link target="_blank" :to="{ path: '/flickr/detail', query: { userId: user.user_id }}">{{ user.user_id }}</nuxt-link>
+      <b-badge variant="info">{{user.totalImgs}}</b-badge>
+      <span>Name: {{ user.realname }}</span>
     </div>
     <div class="col-3">
       <b-badge variant="info"><span class="material-icons md-n">{{ status }}</span></b-badge>
@@ -23,6 +25,9 @@ export default {
         return 'wait'
       }
     }
+  },
+  mounted() {
+    console.log(this.user)
   },
   methods: {
     removeThisUser () {
