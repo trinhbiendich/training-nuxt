@@ -50,13 +50,16 @@
 <script>
 export default {
   name: "Header",
-  beforeCreate() {
-  },
   mounted() {
-    this.fetchMenus();
+
   },
   created() {
-
+    this.$axios.get('/menu')
+    .then(res => {
+      if (res.type === 'success') {
+        this.links = res.data;
+      }
+    })
   },
   data() {
     return {
@@ -64,14 +67,6 @@ export default {
     }
   },
   methods: {
-    async fetchMenus() {
-      let res = await fetch('https://api.opencms.codes/menu');
-      let data = await res.json();
-      if (data.type === "success") {
-        this.links = data.data;
-      }
-      //console.log(this.links);
-    },
     hasChild: function(item) {
       return item.children !== undefined && item.children.length > 0;
     },
