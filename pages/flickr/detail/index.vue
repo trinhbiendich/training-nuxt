@@ -1,5 +1,9 @@
 <template>
   <div >
+    <router-link to="/flickr"><span class="material-icons">reply</span> Go back</router-link>
+    <div v-if="msg !== ''">
+      <div class="alert alert-info">{{ msg }}</div>
+    </div>
     <div id="myGallery">
       <a v-for="(img, idx) in imgs" :key="'img_' + idx" :href="img" class="img-item">
         <img class="img-fluid lazy" :src="img" />
@@ -15,9 +19,6 @@ export default {
       title: this.pageInfo.title === "" ? "Training NuxtJS" : "Training NuxtJS | " + this.pageInfo.title
     }
   },
-  props: {
-
-  },
   data () {
     return {
       pageInfo: {
@@ -25,17 +26,15 @@ export default {
       },
       user: {},
       imgs: [],
+      msg: '',
     }
-  },
-  created() {
-
-    console.log("created")
   },
   mounted() {
     let userId = this.$route.query.userId
     this.pageInfo.title = 'Detail of ' + userId
     this.$axios.$get(`/${userId}`).then(res => {
-      if (res.type === 'error') {
+      if (res.type !== 'success') {
+        this.msg = 'There are no images or data on this user'
         return
       }
       this.user = res.data
@@ -50,7 +49,6 @@ export default {
         })
       })
     })
-    console.log("mounted")
   },
   methods: {
 

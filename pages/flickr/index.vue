@@ -109,10 +109,13 @@ export default {
       if (type === 'delete') {
         this.$axios.post(`/users_wait/${user.user_id}`, user)
           .then(res => {
-            this.$axios.$delete(`/users_delete/${user.user_id}`)
-              .then(res2 => {
-                this.deleteUsers = this.refreshObjExceptThis(user, this.deleteUsers)
-                this.waitUsers[user.user_id] = user
+            this.$axios.delete(`/${user.user_id}_photos`)
+              .then(resOfDelPhotos => {
+                this.$axios.$delete(`/users_delete/${user.user_id}`)
+                  .then(resOfDelUser => {
+                    this.deleteUsers = this.refreshObjExceptThis(user, this.deleteUsers)
+                    this.waitUsers[user.user_id] = user
+                  })
               })
           })
       }

@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-9">
-      <a :href="'/flickr/detail/?userId=' + user.user_id">{{ user.user_id }}</a>
+      <nuxt-link :to="{ path: '/flickr/detail', query: { userId: user.user_id }}">{{ user.user_id }}</nuxt-link>
     </div>
     <div class="col-3">
       <b-badge variant="info"><span class="material-icons md-n">{{ status }}</span></b-badge>
