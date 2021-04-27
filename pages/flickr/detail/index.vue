@@ -9,7 +9,10 @@
         <img class="img-fluid lazy" :src="urlMin(img, 300)" />
       </a>
     </div>
-    <a class="btn btn-success" @click="loadImagesFromServer">Load more</a>
+    <div v-if="isLoading" ref="loading" class="loading center-screen"></div>
+    <div class="center">
+      <a class="btn btn-success" @click="loadImagesFromServer">Load more</a>
+    </div>
   </div>
 </template>
 
@@ -34,6 +37,7 @@ export default {
       perPage: 50,
       totalPage: 1,
       curTotalImages: 0,
+      isLoading: false,
     }
   },
   mounted() {
@@ -46,6 +50,7 @@ export default {
       }
       this.user = res.data
     })
+    this.isLoading = true
     this.$axios.$get(`/${this.userId}_photos`)
       .then(res => {
         if (res.type !== 'success') {
@@ -66,7 +71,7 @@ export default {
       let counter = 0
       const offset = (this.curPage - 1) * this.perPage
       const nextOffset = offset + this.perPage
-
+      this.isLoading = true
       let photoIds = this.photoIds.slice(offset, nextOffset)
       this.curPage++
       this.curTotalImages += photoIds.length
@@ -78,6 +83,7 @@ export default {
             this.addImage(resOfPhoto)
 
             if (counter >= photoIds.length) {
+              this.isLoading = false
               this.$nextTick(() => {
                 $('#myGallery').justifiedGallery({
                   rowHeight : 300,
@@ -140,5 +146,25 @@ export default {
 </script>
 
 <style scoped>
+.center {
+  text-align: center;
+}
+.center-screen {
+  position: fixed;
+  top: 45%;
+  left: 45%;
+}
+.loading {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>
