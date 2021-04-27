@@ -24,13 +24,13 @@
       <div class="col-4 p-2">
         <div class="mb-2 alert alert-danger">Deleted <span class="material-icons md-n">delete</span></div>
         <div v-for="(user, idx) in deleteUsers" :key="'del'+idx">
-          <user-item @handleOnDeleteUser="onDeleteUser(user, 'delete')" :user="user" status="dangerous" />
+          <user-item @handleRetry="onRetryDownload" @handleOnDeleteUser="onDeleteUser(user, 'delete')" :user="user" status="dangerous" />
         </div>
       </div>
       <div class="col-4 p-2">
         <div class="mb-2 alert alert-success">Done <span class="material-icons md-n">thumb_up</span></div>
         <div v-for="(user, idx) in doneUsers" :key="'done'+idx">
-          <user-item @handleOnDeleteUser="onDeleteUser(user, 'done')" :user="user" status="task_alt" />
+          <user-item @handleRetry="onRetryDownload" @handleOnDeleteUser="onDeleteUser(user, 'done')" :user="user" status="task_alt" />
         </div>
       </div>
     </div>
@@ -136,6 +136,28 @@ export default {
               .then(res2 => {
                 this.doneUsers = this.refreshObjExceptThis(user, this.doneUsers)
                 this.deleteUsers[user.user_id] = user
+              })
+          })
+      }
+    },
+    onRetryDownload (user, type) {
+      if (type === 'delete') {
+        this.$axios.post(`/users_wait/${user.user_id}`, user)
+          .then(res => {
+            this.$axios.$delete(`/users_delete/${user.user_id}`)
+              .then(resOfDelUser => {
+                this.deleteUsers = this.refreshObjExceptThis(user, this.deleteUsers)
+                this.waitUsers[user.user_id] = user
+              })
+          })
+      }
+      if (type === 'done') {
+        this.$axios.post(`/users_wait/${user.user_id}`, user)
+          .then(res => {
+            this.$axios.$delete(`/users_done/${user.user_id}`)
+              .then(res2 => {
+                this.doneUsers = this.refreshObjExceptThis(user, this.doneUsers)
+                this.waitUsers[user.user_id] = user
               })
           })
       }

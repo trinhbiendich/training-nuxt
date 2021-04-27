@@ -1,11 +1,18 @@
 <template>
   <div class="row">
-    <div class="col-9">
-      <nuxt-link target="_blank" :to="{ path: '/flickr/detail', query: { userId: user.user_id }}">{{ user.user_id }}</nuxt-link>
-      <b-badge variant="info">{{user.totalImgs}}</b-badge>
-      <span>Name: {{ user.realname }}</span>
+    <div class="col-7">
+      <b v-if="validUsername">{{ user.realname }}</b>
+      <nuxt-link target="_blank"
+                 :to="{ path: '/flickr/detail', query: { userId: user.user_id }}">
+        <i v-if="validUsername" class="fa fa-images"></i>
+        <span v-else >{{ user.user_id }}</span>
+      </nuxt-link>
+
+      <a target="_blank" :href="`https://www.flickr.com/photos/${user.user_id}`" ><i class="fa fa-flickr"></i></a>
     </div>
-    <div class="col-3">
+    <div class="col-5">
+      <a v-if="status != 'pending_actions'" href="javascript:;" @click="retryDownload" ><i class="fa fa-sync"></i></a>
+      <b-badge variant="info">{{user.totalImgs}}</b-badge>
       <b-badge variant="info"><span class="material-icons md-n">{{ status }}</span></b-badge>
       <a href="javascript:;" @click="removeThisUser" ><span class="material-icons md-n">delete</span></a>
     </div>
@@ -26,13 +33,25 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log(this.user)
+  computed: {
+    validUsername () {
+      return this.user.realname != undefined && this.user.realname != ''
+    }
   },
   methods: {
     removeThisUser () {
       this.$emit('handleOnDeleteUser', this.user)
-    }
+    },
+    retryDownload () {
+      switch (this.status) {
+        case "task_alt":
+          this.$emit('handleRetry', this.user, 'done')
+          break
+        case "dangerous":
+          this.$emit('handleRetry', this.user, 'delete')
+          break
+      }
+    },
   }
 }
 </script>

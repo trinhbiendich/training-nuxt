@@ -66,6 +66,10 @@ export default {
       {
         src: "/fb-sdk.js",
         type: "text/javascript"
+      },
+      {
+        src: "//kit.fontawesome.com/1de42d7e79.js",
+        type: "text/javascript"
       }
     ]
   },
