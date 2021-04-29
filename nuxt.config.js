@@ -98,7 +98,7 @@ export default {
 
   publicRuntimeConfig: {
     axios: {
-      baseURL: 'https://api.opencms.codes',
+      baseURL: 'https://api.bolacmuito.xyz',
       //baseURL: 'http://localhost:8765',
     },
   },
