@@ -31,8 +31,8 @@ export default {
   },
   methods :{
     async fetchXXX() {
-      let res1 = await fetch('https://api.opencms.codes/articles/mountains');
-      let res2 = await fetch('https://api.opencms.codes/articles/planets');
+      let res1 = await fetch('https://api.bolacmuito.xyz/articles/mountains');
+      let res2 = await fetch('https://api.bolacmuito.xyz/articles/planets');
       this.mountains = (await res1.json()).data;
       this.planets = (await res2.json()).data;
 

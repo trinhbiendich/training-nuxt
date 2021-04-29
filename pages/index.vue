@@ -30,7 +30,7 @@ export default {
   methods: {
     async fetchPageInfo() {
       let pathMatch = this.$route.params.pathMatch;
-      let url = `https://api.opencms.codes/sites/${pathMatch}`;
+      let url = `https://api.bolacmuito.xyz/sites/${pathMatch}`;
       let res = await fetch(url);
       let data = await res.json();
       if (data.type === "success") {
