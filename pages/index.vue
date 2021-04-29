@@ -10,7 +10,7 @@ export default {
   components: {Logo},
   head() {
     return {
-      title: this.pageInfo.title === "" ? "Training NuxtJS" : "Training NuxtJS | " + this.pageInfo.title
+      title: this.pageInfo.title === "" ? "NuxtJS" : "NuxtJS | " + this.pageInfo.title
     }
   },
   mounted() {
