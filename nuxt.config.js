@@ -18,15 +18,15 @@ export default {
       },
       {
         rel: "stylesheet",
-        href: "https://test.opencms.codes/vendor/justifiedGallery.min.css"
+        href: "https://test.bolacmuito.xyz/vendor/justifiedGallery.min.css"
       },
       {
         rel: "stylesheet",
-        href: "https://test.opencms.codes/vendor/colorbox/colorbox.css"
+        href: "https://test.bolacmuito.xyz/vendor/colorbox/colorbox.css"
       },
       {
         rel: "stylesheet",
-        href: "https://test.opencms.codes/vendor/fontawesome/v5.14.0/css/pro.min.css"
+        href: "https://test.bolacmuito.xyz/vendor/fontawesome/v5.14.0/css/pro.min.css"
       },
       {
         rel: "stylesheet",
@@ -56,11 +56,11 @@ export default {
         type: "text/javascript"
       },
       {
-        src: "https://test.opencms.codes/vendor/jquery.justifiedGallery.min.js",
+        src: "https://test.bolacmuito.xyz/vendor/jquery.justifiedGallery.min.js",
         type: "text/javascript"
       },
       {
-        src: "https://test.opencms.codes/vendor/colorbox/jquery.colorbox-min.js",
+        src: "https://test.bolacmuito.xyz/vendor/colorbox/jquery.colorbox-min.js",
         type: "text/javascript"
       },
       {
