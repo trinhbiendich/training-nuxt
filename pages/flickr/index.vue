@@ -111,7 +111,6 @@ export default {
       this.$axios.$delete(`/users_delete/${user.user_id}`)
         .then(resOfDelUser => {
           this.deleteUsers = this.refreshObjExceptThis(user, this.deleteUsers)
-          this.waitUsers[user.user_id] = user
         })
     },
     moveWaitToDelete (user) {
