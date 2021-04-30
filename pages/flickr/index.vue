@@ -105,39 +105,44 @@ export default {
       }
       return tmpUsers
     },
+    removeByDelete (user) {
+      this.$axios.delete(`/${user.user_id}_photos`)
+        .then(resOfDelPhotos => console.log(resOfDelPhotos, 'remove photos done'))
+      this.$axios.$delete(`/users_delete/${user.user_id}`)
+        .then(resOfDelUser => {
+          this.deleteUsers = this.refreshObjExceptThis(user, this.deleteUsers)
+          this.waitUsers[user.user_id] = user
+        })
+    },
+    moveWaitToDelete (user) {
+      this.$axios.post(`/users_delete/${user.user_id}`, user)
+        .then(res => {
+          this.$axios.$delete(`/users_wait/${user.user_id}`)
+            .then(res2 => {
+              this.waitUsers = this.refreshObjExceptThis(user, this.waitUsers)
+              this.deleteUsers[user.user_id] = user
+            })
+        })
+    },
+    moveDoneToDelete (user) {
+      this.$axios.post(`/users_delete/${user.user_id}`, user)
+        .then(res => {
+          this.$axios.$delete(`/users_done/${user.user_id}`)
+            .then(res2 => {
+              this.doneUsers = this.refreshObjExceptThis(user, this.doneUsers)
+              this.deleteUsers[user.user_id] = user
+            })
+        })
+    },
     onDeleteUser (user, type) {
       if (type === 'delete') {
-        this.$axios.post(`/users_wait/${user.user_id}`, user)
-          .then(res => {
-            this.$axios.delete(`/${user.user_id}_photos`)
-              .then(resOfDelPhotos => {
-                this.$axios.$delete(`/users_delete/${user.user_id}`)
-                  .then(resOfDelUser => {
-                    this.deleteUsers = this.refreshObjExceptThis(user, this.deleteUsers)
-                    this.waitUsers[user.user_id] = user
-                  })
-              })
-          })
+        this.removeByDelete(user)
       }
       if (type === 'wait') {
-        this.$axios.post(`/users_delete/${user.user_id}`, user)
-          .then(res => {
-            this.$axios.$delete(`/users_wait/${user.user_id}`)
-              .then(res2 => {
-                this.waitUsers = this.refreshObjExceptThis(user, this.waitUsers)
-                this.deleteUsers[user.user_id] = user
-              })
-          })
+        this.moveWaitToDelete(user)
       }
       if (type === 'done') {
-        this.$axios.post(`/users_delete/${user.user_id}`, user)
-          .then(res => {
-            this.$axios.$delete(`/users_done/${user.user_id}`)
-              .then(res2 => {
-                this.doneUsers = this.refreshObjExceptThis(user, this.doneUsers)
-                this.deleteUsers[user.user_id] = user
-              })
-          })
+        this.moveDoneToDelete(user)
       }
     },
     onRetryDownload (user, type) {
