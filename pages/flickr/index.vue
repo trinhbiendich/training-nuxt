@@ -228,7 +228,7 @@ export default {
         url = url.substring(0, url.indexOf('/'))
       }
       return url
-    }
+    },
   }
 }
 </script>

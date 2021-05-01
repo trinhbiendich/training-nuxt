@@ -9,8 +9,14 @@
       </nuxt-link>
 
       <a target="_blank" :href="`https://www.flickr.com/photos/${user.user_id}`" ><i class="fa fa-flickr"></i></a>
+
+      <span v-if="msg !== ''">{{msg}}</span>
     </div>
     <div class="col-5">
+      <a href="javascript:;" @click="downloadImgLinks" >
+        <i v-if="!onDownloading" class="fa fa-download"></i>
+        <i v-if="onDownloading" class="fa fa-hourglass"></i>
+      </a>
       <a v-if="status != 'pending_actions'" href="javascript:;" @click="retryDownload" ><i class="fa fa-sync"></i></a>
       <b-badge variant="info">{{user.totalImgs}}</b-badge>
       <b-badge variant="info"><span class="material-icons md-n">{{ status }}</span></b-badge>
@@ -20,6 +26,8 @@
 </template>
 
 <script>
+import { saveAs } from 'file-saver'
+
 export default {
   name: "UserItem",
   props: {
@@ -33,10 +41,20 @@ export default {
       }
     }
   },
+  data () {
+    return {
+      onDownloading: false,
+      userId: '',
+      msg: '',
+    }
+  },
   computed: {
     validUsername () {
       return this.user.realname != undefined && this.user.realname != ''
     }
+  },
+  created() {
+    this.userId = this.user.user_id
   },
   methods: {
     removeThisUser () {
@@ -51,6 +69,51 @@ export default {
           this.$emit('handleRetry', this.user, 'delete')
           break
       }
+    },
+    collectData (dataset, xstorage, total, indx, cb) {
+      if (indx >= total) {
+        cb()
+        this.onDownloading = false
+        return
+      }
+      this.msg = `(${indx}/${total})`
+      let photoId = dataset[indx]
+      this.$axios.$get(`/${this.userId}_photos_${photoId}`)
+        .then(resOfPhoto => {
+          if (resOfPhoto.type !== 'success') {
+            //no thing
+          } else {
+            const img = resOfPhoto.data
+            const types = ["sq", "q", "t", "s", "n", "w", "m", "z", "c", "l", "h", "k", "3k", "4k", "5k", "6k", "o"].reverse()
+            for(let i=0; i<types.length; i++) {
+              let type = types[i]
+              if (img[`url_${type}`] === undefined) {
+                continue
+              }
+
+              if (img[`url_${type}`] !== undefined) {
+                xstorage.push(img[`url_${type}`])
+                break
+              }
+            }
+          }
+          this.collectData(dataset, xstorage, total, indx+1, cb)
+        })
+    },
+    downloadImgLinks () {
+      this.$axios.$get(`/${this.userId}_photos`)
+        .then(res => {
+          if (res.type !== 'success') {
+            return
+          }
+          this.onDownloading = true
+          let photoIds = res.data
+          let xstorage = []
+          this.collectData(photoIds, xstorage, photoIds.length, 0, () => {
+            var blob = new Blob([xstorage.join('\n')], {type: "text/plain;charset=utf-8"});
+            saveAs(blob, `imgs_${this.userId}.txt`);
+          })
+        })
     },
   }
 }

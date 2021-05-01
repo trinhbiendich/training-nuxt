@@ -1,6 +1,11 @@
 <template>
   <div >
-    <router-link to="/flickr"><span class="material-icons">reply</span> Go back</router-link>
+    <div class="row">
+      <div class="col-12 p-3">
+        <router-link to="/flickr"><span class="material-icons">reply</span> Go back</router-link>
+        <span class="material-icons">autorenew</span>
+      </div>
+    </div>
     <div v-if="msg !== ''">
       <div class="alert alert-info">{{ msg }}</div>
     </div>
@@ -17,6 +22,7 @@
 </template>
 
 <script>
+
 export default {
   head() {
     return {
@@ -98,7 +104,7 @@ export default {
     },
     addImage (res) {
       if (res.type !== 'success') {
-        return
+          return
       }
       this.imgs.push(res.data)
     },
@@ -123,7 +129,7 @@ export default {
       return '/images/no-image.png'
     },
     urlMax (img, maxWidth = null) {
-      const types = ["sq", "q", "t", "s", "n", "w", "m", "z", "c", "l", "h", "o"].reverse()
+      const types = ["sq", "q", "t", "s", "n", "w", "m", "z", "c", "l", "h", "k", "3k", "4k", "5k", "6k", "o"].reverse()
 
       for(let i=0; i<types.length; i++) {
         let type = types[i]
@@ -140,7 +146,7 @@ export default {
         }
       }
       return '/images/no-image.png'
-    }
+    },
   },
 }
 </script>

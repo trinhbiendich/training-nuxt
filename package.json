@@ -17,6 +17,7 @@
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.8.3",
     "crypt-js": "^1.0.4",
+    "file-saver": "^2.0.5",
     "jquery": "^3.6.0",
     "nuxt": "^2.14.12",
     "rxjs": "^6.6.3",
