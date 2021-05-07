@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-7">
       <b v-if="validUsername">{{ user.realname }}</b>
-      <nuxt-link target="_blank" :to="{ path: '/flickr/detail', query: { userId: user.user_id }}">
+      <nuxt-link target="_blank" class="badge badge-info" :to="{ path: '/flickr/detail', query: { userId: user.user_id }}">
         <i class="fa fa-images"></i>
         <span>{{ user.user_id }}</span>
       </nuxt-link>
