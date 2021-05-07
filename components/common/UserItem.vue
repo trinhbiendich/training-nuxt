@@ -2,10 +2,9 @@
   <div class="row">
     <div class="col-7">
       <b v-if="validUsername">{{ user.realname }}</b>
-      <nuxt-link target="_blank"
-                 :to="{ path: '/flickr/detail', query: { userId: user.user_id }}">
-        <i v-if="validUsername" class="fa fa-images"></i>
-        <span v-else >{{ user.user_id }}</span>
+      <nuxt-link target="_blank" :to="{ path: '/flickr/detail', query: { userId: user.user_id }}">
+        <i class="fa fa-images"></i>
+        <span>{{ user.user_id }}</span>
       </nuxt-link>
 
       <a target="_blank" :href="`https://www.flickr.com/photos/${user.user_id}`" ><i class="fa fa-flickr"></i></a>
