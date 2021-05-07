@@ -64,7 +64,14 @@ export default {
         }
         this.photoIds = res.data
 
-        this.totalPage = Math.ceil(this.photoIds.length / (this.perPage * 1.0))
+        let totalPhotosId = 0
+        if (typeof(this.photoIds) === 'object') {
+          totalPhotosId = Object.keys(this.photoIds).length
+        } else {
+          totalPhotosId = this.photoIds.length
+        }
+
+        this.totalPage = Math.ceil(totalPhotosId / (this.perPage * 1.0))
 
         this.loadImagesFromServer()
       })
