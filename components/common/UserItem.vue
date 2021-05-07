@@ -107,6 +107,9 @@ export default {
           }
           this.onDownloading = true
           let photoIds = res.data
+          if (typeof(photoIds) === 'object') {
+            photoIds = Object.values(photoIds)
+          }
           let xstorage = []
           this.collectData(photoIds, xstorage, photoIds.length, 0, () => {
             var blob = new Blob([xstorage.join('\n')], {type: "text/plain;charset=utf-8"});
