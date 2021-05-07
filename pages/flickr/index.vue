@@ -15,19 +15,19 @@
       </div>
     </div>
     <div class="row mt-2">
-      <div class="col-lg-4 col-sm-12 p-2">
-        <div class="mb-2 alert alert-info" >Wait <span class="material-icons md-n">pending_actions</span></div>
-        <div v-for="(user, idx) in waitUsers" :key="'wait'+idx">
-          <user-item @handleOnDeleteUser="onDeleteUser(user, 'wait')" :user="user" status="pending_actions" />
-        </div>
-      </div>
-      <div class="col-lg-4 col-sm-12 p-2">
+      <div v-if="deleteUsers.length > 0" class="col-lg-12 col-sm-12 p-2">
         <div class="mb-2 alert alert-danger">Deleted <span class="material-icons md-n">delete</span></div>
         <div v-for="(user, idx) in deleteUsers" :key="'del'+idx">
           <user-item @handleRetry="onRetryDownload" @handleOnDeleteUser="onDeleteUser(user, 'delete')" :user="user" status="dangerous" />
         </div>
       </div>
-      <div class="col-lg-4 col-sm-12 p-2">
+      <div class="col-lg-6 col-sm-12 p-2">
+        <div class="mb-2 alert alert-info" >Wait <span class="material-icons md-n">pending_actions</span></div>
+        <div v-for="(user, idx) in waitUsers" :key="'wait'+idx">
+          <user-item @handleOnDeleteUser="onDeleteUser(user, 'wait')" :user="user" status="pending_actions" />
+        </div>
+      </div>
+      <div class="col-lg-6 col-sm-12 p-2">
         <div class="mb-2 alert alert-success">Done <span class="material-icons md-n">thumb_up</span></div>
         <div v-for="(user, idx) in doneUsers" :key="'done'+idx">
           <user-item @handleRetry="onRetryDownload" @handleOnDeleteUser="onDeleteUser(user, 'done')" :user="user" status="task_alt" />
