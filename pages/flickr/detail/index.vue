@@ -67,6 +67,7 @@ export default {
         let totalPhotosId = 0
         if (typeof(this.photoIds) === 'object') {
           totalPhotosId = Object.keys(this.photoIds).length
+          this.photoIds = Object.values(this.photoIds)
         } else {
           totalPhotosId = this.photoIds.length
         }
