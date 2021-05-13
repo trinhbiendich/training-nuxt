@@ -54,6 +54,7 @@ export default {
   },
   created() {
     this.userId = this.user.user_id
+    console.log(this.user)
   },
   methods: {
     removeThisUser () {
@@ -76,28 +77,41 @@ export default {
         return
       }
       this.msg = `(${indx}/${total})`
-      let photoId = dataset[indx]
-      this.$axios.$get(`/${this.userId}_photos_${photoId}`)
-        .then(resOfPhoto => {
-          if (resOfPhoto.type !== 'success') {
-            //no thing
-          } else {
-            const img = resOfPhoto.data
-            const types = ["sq", "q", "t", "s", "n", "w", "m", "z", "c", "l", "h", "k", "3k", "4k", "5k", "6k", "o"].reverse()
-            for(let i=0; i<types.length; i++) {
-              let type = types[i]
-              if (img[`url_${type}`] === undefined) {
-                continue
-              }
-
-              if (img[`url_${type}`] !== undefined) {
-                xstorage.push(img[`url_${type}`])
-                break
-              }
+      let photoRequests = dataset[indx].map(photoId => this.$axios.$get(`/${this.userId}_photos_${photoId}`))
+      Promise.all(photoRequests)
+        .then((...responses) => {
+          responses[0].forEach(res => {
+            const imgData = res.data
+            console.log(imgData)
+            const maxUrl = this.getMaxImgUrl(imgData)
+            if (maxUrl !== '') {
+              xstorage.push(maxUrl)
             }
-          }
+          })
           this.collectData(dataset, xstorage, total, indx+1, cb)
         })
+    },
+    getMaxImgUrl (img) {
+      const types = ["sq", "q", "t", "s", "n", "w", "m", "z", "c", "l", "h", "k", "3k", "4k", "5k", "6k", "o"].reverse()
+      let url = ''
+      for(let i=0; i<types.length; i++) {
+        let type = types[i]
+        if (img[`url_${type}`] === undefined) {
+          continue
+        }
+
+        if (img[`url_${type}`] !== undefined) {
+         url = img[`url_${type}`]
+          break
+        }
+      }
+      return url
+    },
+    partition (items, size) {
+      var result = this.$_.groupBy(items, function(item, i) {
+        return Math.floor(i/size);
+      });
+      return this.$_.values(result);
     },
     downloadImgLinks () {
       this.$axios.$get(`/${this.userId}_photos`)
@@ -110,8 +124,10 @@ export default {
           if (typeof(photoIds) === 'object') {
             photoIds = Object.values(photoIds)
           }
+          const photosIdsPartitions = this.partition(photoIds, 10)
+
           let xstorage = []
-          this.collectData(photoIds, xstorage, photoIds.length, 0, () => {
+          this.collectData(photosIdsPartitions, xstorage, photosIdsPartitions.length, 0, () => {
             var blob = new Blob([xstorage.join('\n')], {type: "text/plain;charset=utf-8"});
             saveAs(blob, `imgs_${this.userId}.txt`);
           })

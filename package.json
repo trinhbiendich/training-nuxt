@@ -21,7 +21,8 @@
     "jquery": "^3.6.0",
     "nuxt": "^2.14.12",
     "rxjs": "^6.6.3",
-    "vue": "^2.6.12"
+    "vue": "^2.6.12",
+    "vue-underscore": "^0.1.4"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^3.4.2",
