@@ -45,6 +45,19 @@ export default {
       onDownloading: false,
       userId: '',
       msg: '',
+
+      poolInfo: {
+        max: 20,
+        inProcess: 0,
+        done: 0,
+        pid: null,
+      },
+
+      reqsInfo: {
+        dataset: [],
+        total: 200,
+        index: 0,
+      },
     }
   },
   computed: {
@@ -54,7 +67,6 @@ export default {
   },
   created() {
     this.userId = this.user.user_id
-    console.log(this.user)
   },
   methods: {
     removeThisUser () {
@@ -70,26 +82,37 @@ export default {
           break
       }
     },
-    collectData (dataset, xstorage, total, indx, cb) {
-      if (indx >= total) {
-        cb()
-        this.onDownloading = false
-        return
-      }
-      this.msg = `(${indx}/${total})`
-      let photoRequests = dataset[indx].map(photoId => this.$axios.$get(`/${this.userId}_photos_${photoId}`))
-      Promise.all(photoRequests)
-        .then((...responses) => {
-          responses[0].forEach(res => {
+
+    axiosPool (callback) {
+      let processQueue = {}
+      let storage = []
+      this.poolInfo.pid = setInterval(() => {
+        this.poolInfo.inProcess = Object.keys(processQueue).length
+        this.msg = `(${this.poolInfo.done}/${this.reqsInfo.total}) - pool ${this.poolInfo.inProcess}`
+        if (this.poolInfo.done >= this.reqsInfo.total) {
+          clearInterval(this.poolInfo.pid)
+          this.msg = ''
+          callback(storage)
+          return
+        }
+        if (this.poolInfo.inProcess >= this.poolInfo.max) {
+          return
+        }
+        let id = Math.random()
+        let photoId = this.reqsInfo.dataset[this.reqsInfo.index]
+        processQueue[id] = this.$axios.$get(`/${this.userId}_photos_${photoId}`)
+          .then(res => {
             const imgData = res.data
-            console.log(imgData)
             const maxUrl = this.getMaxImgUrl(imgData)
             if (maxUrl !== '') {
-              xstorage.push(maxUrl)
+              storage.push(maxUrl)
             }
+          }).finally(() => {
+            delete processQueue[id]
+            this.poolInfo.done++
           })
-          this.collectData(dataset, xstorage, total, indx+1, cb)
-        })
+        this.reqsInfo.index++
+      }, 100)
     },
     getMaxImgUrl (img) {
       const types = ["sq", "q", "t", "s", "n", "w", "m", "z", "c", "l", "h", "k", "3k", "4k", "5k", "6k", "o"].reverse()
@@ -107,12 +130,6 @@ export default {
       }
       return url
     },
-    partition (items, size) {
-      var result = this.$_.groupBy(items, function(item, i) {
-        return Math.floor(i/size);
-      });
-      return this.$_.values(result);
-    },
     downloadImgLinks () {
       this.$axios.$get(`/${this.userId}_photos`)
         .then(res => {
@@ -124,12 +141,18 @@ export default {
           if (typeof(photoIds) === 'object') {
             photoIds = Object.values(photoIds)
           }
-          const photosIdsPartitions = this.partition(photoIds, 10)
+          this.reqsInfo.dataset = photoIds
+          this.reqsInfo.total = photoIds.length
+          this.reqsInfo.index = 0
 
-          let xstorage = []
-          this.collectData(photosIdsPartitions, xstorage, photosIdsPartitions.length, 0, () => {
-            var blob = new Blob([xstorage.join('\n')], {type: "text/plain;charset=utf-8"});
-            saveAs(blob, `imgs_${this.userId}.txt`);
+          this.poolInfo.done = 0
+          this.poolInfo.inProcess = 0
+          this.onDownloading = true
+
+          this.axiosPool((storage) => {
+            const blob = new Blob([storage.join('\n')], {type: "text/plain;charset=utf-8"});
+            saveAs(blob, `images_${this.userId}.txt`);
+            this.onDownloading = false
           })
         })
     },
