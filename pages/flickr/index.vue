@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="row mt-2">
-      <div v-if="deleteUsers.length > 0" class="col-lg-12 col-sm-12 p-2">
+      <div v-if="deleteUsers.length > 0 || Object.keys(deleteUsers).length > 0" class="col-lg-12 col-sm-12 p-2">
         <div class="mb-2 alert alert-danger">Deleted <span class="material-icons md-n">delete</span></div>
         <div v-for="(user, idx) in deleteUsers" :key="'del'+idx">
           <user-item @handleRetry="onRetryDownload" @handleOnDeleteUser="onDeleteUser(user, 'delete')" :user="user" status="dangerous" />

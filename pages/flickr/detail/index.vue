@@ -23,7 +23,7 @@
     </div>
     <div v-if="isLoading" ref="loading" class="loading center-screen"></div>
     <div class="center">
-      <a class="btn btn-success" @click="loadImagesFromServer">Load more</a>
+      <a v-if="curPage <= totalPage" class="btn btn-success" @click="loadImagesFromServer">Load more</a>
     </div>
   </div>
 </template>
@@ -181,7 +181,8 @@ export default {
     urlMax (img, maxWidth = null) {
       const types = ["sq", "q", "t", "s", "n", "w", "m", "z", "c", "l", "h", "k", "3k", "4k", "5k", "6k", "o"].reverse()
       if (img.media === 'video') {
-        return `https://www.flickr.com/video_download.gne?id=${img.id}`
+        return `https://www.flickr.com/photos/${this.userId}/${img.id}/in/datetaken/`
+        //return `https://www.flickr.com/video_download.gne?id=${img.id}`
       }
       for(let i=0; i<types.length; i++) {
         let type = types[i]
