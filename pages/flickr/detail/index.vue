@@ -2,15 +2,22 @@
   <div >
     <div class="row">
       <div class="col-12 p-3">
-        <router-link to="/flickr"><span class="material-icons">reply</span> Go back</router-link>
-        <span class="material-icons">autorenew</span>
+        <router-link class="btn btn-success" to="/flickr"><i class="fa fa-reply"></i> Go back</router-link>
+        <a href="javascript:;" class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
+      </div>
+      <div class="col-12 p-3">
+        <a v-for="page in pages"
+           :key="page" href="javascript:;"
+           class="badge mr-2"
+           :class="{'badge-success': page === focusPage, 'badge-info': page !== focusPage}"
+           @click="loadImageForPage(page)">{{ page }}</a>
       </div>
     </div>
     <div v-if="msg !== ''">
       <div class="alert alert-info">{{ msg }}</div>
     </div>
     <div ref="myGallery" id="myGallery">
-      <a v-for="(img, idx) in imgs" :key="'img_' + idx" :href="urlMax(img)" class="img-item">
+      <a v-for="(img, idx) in imgs" :key="'img_' + idx" target="_blank" :href="urlMax(img)" class="img-item">
         <img class="img-fluid lazy" :src="urlMin(img, 300)" />
       </a>
     </div>
@@ -26,7 +33,7 @@
 export default {
   head() {
     return {
-      title: this.pageInfo.title === "" ? "NuxtJS" : "NuxtJS | " + this.pageInfo.title
+      title: this.pageInfo.title === "" ? "NuxtJS" : this.pageInfo.title
     }
   },
   data () {
@@ -40,44 +47,79 @@ export default {
       msg: '',
       userId: '',
       curPage: 1,
-      perPage: 50,
+      perPage: 50.0,
       totalPage: 1,
       curTotalImages: 0,
       isLoading: false,
+      pages: [],
+      focusPage: '',
     }
   },
   mounted() {
     this.userId = this.$route.query.userId
     this.pageInfo.title = 'Detail of ' + this.userId
-    this.$axios.$get(`/${this.userId}`).then(res => {
-      if (res.type !== 'success') {
-        this.msg = 'There are no images or data on this user'
-        return
-      }
-      this.user = res.data
+
+    this.loadUserInfo()
+
+    this.loadPages(() => {
+      this.loadImageForPage(this.pages[0])
     })
-    this.isLoading = true
-    this.$axios.$get(`/${this.userId}_photos`)
-      .then(res => {
-        if (res.type !== 'success') {
-          return
-        }
-        this.photoIds = res.data
 
-        let totalPhotosId = 0
-        if (typeof(this.photoIds) === 'object') {
-          totalPhotosId = Object.keys(this.photoIds).length
-          this.photoIds = Object.values(this.photoIds)
-        } else {
-          totalPhotosId = this.photoIds.length
-        }
-
-        this.totalPage = Math.ceil(totalPhotosId / (this.perPage * 1.0))
-
-        this.loadImagesFromServer()
-      })
   },
   methods: {
+    loadImageForPage (page) {
+      if (page === this.focusPage) {
+        return
+      }
+      this.isLoading = true
+      this.photoIds = []
+      this.curPage = 1
+      this.totalPage = 1
+      this.imgs = []
+      this.curTotalImages = 0
+      this.focusPage = page
+      this.$axios.$get(`/${this.userId}${page}`)
+        .then(res => {
+          if (res.type !== 'success') {
+            return
+          }
+          this.photoIds = res.data
+
+          let totalPhotosId = 0
+          if (typeof(this.photoIds) === 'object') {
+            totalPhotosId = Object.keys(this.photoIds).length
+            this.photoIds = Object.values(this.photoIds)
+          } else {
+            totalPhotosId = this.photoIds.length
+          }
+
+          this.totalPage = Math.ceil(totalPhotosId / this.perPage)
+
+          this.loadImagesFromServer()
+        })
+    },
+    loadUserInfo () {
+      this.$axios.$get(`/users/${this.userId}`).then(res => {
+        if (res.type !== 'success') {
+          this.msg = 'There are no images or data on this user'
+          return
+        }
+        this.user = res.data
+
+        const displayName = this.user.realname !== '' ? this.user.realname : this.user.username
+        this.pageInfo.title = `[${this.userId}] - ${displayName}`
+      })
+    },
+    loadPages (callback) {
+      this.$axios.$get(`/${this.userId}_pageInfo`).then(res => {
+        if (res.type !== 'success') {
+          this.msg = 'There are no images or data on this user'
+          return
+        }
+        this.pages = res.data
+        callback()
+      })
+    },
     loadImagesFromServer () {
       if (this.curPage > this.totalPage) {
         return
@@ -90,7 +132,7 @@ export default {
       this.curPage++
       this.curTotalImages += photoIds.length
       photoIds.forEach((photoId, idx) => {
-        this.$axios.$get(`/${this.userId}_photos_${photoId}`)
+        this.$axios.$get(`/${this.userId}${this.focusPage}_${photoId}`)
           .then(resOfPhoto => {
             counter++;
 
@@ -138,7 +180,9 @@ export default {
     },
     urlMax (img, maxWidth = null) {
       const types = ["sq", "q", "t", "s", "n", "w", "m", "z", "c", "l", "h", "k", "3k", "4k", "5k", "6k", "o"].reverse()
-
+      if (img.media === 'video') {
+        return `https://www.flickr.com/video_download.gne?id=${img.id}`
+      }
       for(let i=0; i<types.length; i++) {
         let type = types[i]
         if (img[`url_${type}`] === undefined) {
