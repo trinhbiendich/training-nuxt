@@ -1,26 +1,16 @@
 <template>
   <div class="container-fluid m-2">
-    <div class="row">
+    <div class="row show_form">
       <div class="col-12">
         <div class="form-group">
           <label for="url">URL</label>
           <input @change="addDataToServer" type="text" class="form-control" v-model="link.url" id="url" >
         </div>
-        <div class="form-group">
-          <label for="text">Text</label>
-          <input @change="addDataToServer" type="text" class="form-control" v-model="link.text" id="text" >
-        </div>
         <button @click="addDataToServer" type="button" class="mbtn btn btn-primary">Add <span class="material-icons">add</span></button>
         <div v-if="message !== ''" class="mt-2 alert alert-danger">{{ message }}</div>
       </div>
     </div>
-    <div class="row mt-2">
-      <div v-if="deleteUsers.length > 0 || Object.keys(deleteUsers).length > 0" class="col-lg-12 col-sm-12 p-2">
-        <div class="mb-2 alert alert-danger">Deleted <span class="material-icons md-n">delete</span></div>
-        <div v-for="(user, idx) in deleteUsers" :key="'del'+idx">
-          <user-item @handleRetry="onRetryDownload" @handleOnDeleteUser="onDeleteUser(user, 'delete')" :user="user" status="dangerous" />
-        </div>
-      </div>
+    <div class="row mt-210">
       <div class="col-lg-6 col-sm-12 p-2">
         <div class="mb-2 alert alert-info" >Wait <span class="material-icons md-n">pending_actions</span></div>
         <div v-for="(user, idx) in waitUsers" :key="'wait'+idx">
@@ -31,6 +21,12 @@
         <div class="mb-2 alert alert-success">Done <span class="material-icons md-n">thumb_up</span></div>
         <div v-for="(user, idx) in doneUsers" :key="'done'+idx">
           <user-item @handleRetry="onRetryDownload" @handleOnDeleteUser="onDeleteUser(user, 'done')" :user="user" status="task_alt" />
+        </div>
+      </div>
+      <div v-if="deleteUsers.length > 0 || Object.keys(deleteUsers).length > 0" class="col-lg-12 col-sm-12 p-2">
+        <div class="mb-2 alert alert-danger">Deleted <span class="material-icons md-n">delete</span></div>
+        <div v-for="(user, idx) in deleteUsers" :key="'del'+idx">
+          <user-item @handleRetry="onRetryDownload" @handleOnDeleteUser="onDeleteUser(user, 'delete')" :user="user" status="dangerous" />
         </div>
       </div>
     </div>
@@ -176,6 +172,7 @@ export default {
       return ''
     },
     addDataToServer () {
+      this.link.text = this.link.url
       if (!this.validUrl(this.link.url) || this.link.text === '') {
         this.message = this.getMsgOfInvalidData()
         return;
@@ -236,5 +233,17 @@ export default {
 <style scoped>
 .mbtn span {
   vertical-align: middle;
+}
+.show_form {
+  position: fixed;
+  z-index: 1000;
+  background-color: #f3f3f3;
+  width: 99%;
+  height: 210px;
+  top: 60px;
+  padding: 15px;
+}
+.mt-210 {
+  margin-top: 210px;
 }
 </style>

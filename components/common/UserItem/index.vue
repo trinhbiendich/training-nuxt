@@ -9,8 +9,8 @@
 
       <a target="_blank" :href="`https://www.flickr.com/photos/${user.user_id}`" ><i class="fa fa-flickr"></i></a>
       <span v-if="totalVideos > 0"><i class="fa fa-video"></i></span>
+      <ShowAvatar v-if="user.avatar" :user="user" />
 
-      <span v-if="msg !== ''">{{msg}}</span>
     </div>
     <div class="col-5">
       <DownloadImagesButton v-if="pages.length > 0"
@@ -28,10 +28,12 @@
 
 <script>
 import DownloadImagesButton from './downloadImageLinks'
+import ShowAvatar from './showAvatar'
 
 export default {
   components: {
     DownloadImagesButton,
+    ShowAvatar
   },
   props: {
     user: {
@@ -47,8 +49,6 @@ export default {
   data () {
     return {
       userId: '',
-      msg: '',
-
       pages: [],
       totalVideos: 0,
     }
@@ -70,7 +70,6 @@ export default {
     loadPages (callback) {
       this.$axios.$get(`/${this.userId}_pageInfo`).then(res => {
         if (res.type !== 'success') {
-          //this.msg = 'There are no images or data on this user'
           return
         }
         this.pages = res.data
