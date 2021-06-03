@@ -16,11 +16,9 @@
     <div v-if="msg !== ''">
       <div class="alert alert-info">{{ msg }}</div>
     </div>
-    <div ref="myGallery" id="myGallery">
-      <a v-for="(img, idx) in imgs" :key="'img_' + idx" target="_blank" :href="urlMax(img)" class="img-item">
-        <img class="img-fluid lazy" :src="urlMin(img, 300)" />
-      </a>
-    </div>
+
+    <Galleries :user="user" :images="imgs" />
+
     <div v-if="isLoading" ref="loading" class="loading center-screen"></div>
     <div class="center">
       <a v-if="curPage <= totalPage" class="btn btn-success" @click="loadImagesFromServer">Load more</a>
@@ -29,8 +27,12 @@
 </template>
 
 <script>
+import Galleries from '@/components/common/galleries'
 
 export default {
+  components: {
+    Galleries,
+  },
   head() {
     return {
       title: this.pageInfo.title === "" ? "NuxtJS" : this.pageInfo.title
@@ -157,48 +159,6 @@ export default {
           return
       }
       this.imgs.push(res.data)
-    },
-    urlMin (img, minWidth = null) {
-      const types = ["sq", "q", "t", "s", "n", "w", "m", "z", "c", "l", "h", "o"]
-
-      for(let i=0; i<types.length; i++) {
-        let type = types[i]
-        if (img[`url_${type}`] === undefined) {
-          continue
-        }
-
-        if (minWidth !== null && img[`width_${type}`] < minWidth) {
-          continue
-        }
-
-        if (img[`url_${type}`] !== undefined) {
-          return img[`url_${type}`]
-        }
-      }
-
-      return '/images/no-image.png'
-    },
-    urlMax (img, maxWidth = null) {
-      const types = ["sq", "q", "t", "s", "n", "w", "m", "z", "c", "l", "h", "k", "3k", "4k", "5k", "6k", "o"].reverse()
-      if (img.media === 'video') {
-        return `https://www.flickr.com/photos/${this.userId}/${img.id}/in/datetaken/`
-        //return `https://www.flickr.com/video_download.gne?id=${img.id}`
-      }
-      for(let i=0; i<types.length; i++) {
-        let type = types[i]
-        if (img[`url_${type}`] === undefined) {
-          continue
-        }
-
-        if (maxWidth !== null && img[`width_${type}`] > maxWidth) {
-          continue
-        }
-
-        if (img[`url_${type}`] !== undefined) {
-          return img[`url_${type}`]
-        }
-      }
-      return '/images/no-image.png'
     },
   },
 }
