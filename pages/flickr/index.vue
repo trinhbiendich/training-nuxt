@@ -94,7 +94,7 @@ export default {
     refreshObjExceptThis (user, users) {
       let tmpUsers = {}
       for(let userId in users) {
-        if (user.user_id === userId) {
+        if (user.user_id === userId || user.username === userId) {
           continue
         }
         tmpUsers[userId] = users[userId]
@@ -127,6 +127,13 @@ export default {
               this.doneUsers = this.refreshObjExceptThis(user, this.doneUsers)
               this.deleteUsers[user.user_id] = user
             })
+          if (user.username !== undefined && user.username !== '') {
+            this.$axios.$delete(`/users_done/${user.username}`)
+              .then(res2 => {
+                this.doneUsers = this.refreshObjExceptThis(user, this.doneUsers)
+                this.deleteUsers[user.user_id] = user
+              })
+          }
         })
     },
     onDeleteUser (user, type) {
@@ -159,6 +166,13 @@ export default {
                 this.doneUsers = this.refreshObjExceptThis(user, this.doneUsers)
                 this.waitUsers[user.user_id] = user
               })
+            if (user.username !== undefined && user.username !== '') {
+              this.$axios.$delete(`/users_done/${user.username}`)
+                .then(res2 => {
+                  this.doneUsers = this.refreshObjExceptThis(user, this.doneUsers)
+                  this.waitUsers[user.user_id] = user
+                })
+            }
           })
       }
     },

@@ -103,7 +103,10 @@ export default {
         }
         let id = Math.random()
         let photoId = this.reqsInfo.dataset[this.reqsInfo.index]
-        processQueue[id] = this.$axios.$get(`/${this.userId}_photos_${photoId}`)
+        if (photoId === undefined) {
+          console.log(this.reqsInfo)
+        }
+        processQueue[id] = this.$axios.$get(`/photos_${photoId}`)
           .then(res => {
             const imgData = res.data
             const maxUrl = this.getMaxImgUrl(imgData)

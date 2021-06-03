@@ -134,7 +134,7 @@ export default {
       this.curPage++
       this.curTotalImages += photoIds.length
       photoIds.forEach((photoId, idx) => {
-        this.$axios.$get(`/${this.userId}${this.focusPage}_${photoId}`)
+        this.$axios.$get(`/photos_${photoId}`)
           .then(resOfPhoto => {
             counter++;
 
