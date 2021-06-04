@@ -59,12 +59,19 @@ export default {
   },
   mounted() {
     this.userId = this.$route.query.userId
+    let tempFocusPage = ''
+    if (this.$route.query.page !== undefined && this.$route.query.page !== '') {
+      tempFocusPage = this.$route.query.page
+    }
     this.pageInfo.title = 'Detail of ' + this.userId
 
     this.loadUserInfo()
 
     this.loadPages(() => {
-      this.loadImageForPage(this.pages[0])
+      if (tempFocusPage === '') {
+        tempFocusPage = this.pages[0]
+      }
+      this.loadImageForPage(tempFocusPage)
     })
 
   },
@@ -73,6 +80,7 @@ export default {
       if (page === this.focusPage) {
         return
       }
+      this.$router.replace({ query: {userId: this.userId, page: page}})
       this.isLoading = true
       this.photoIds = []
       this.curPage = 1
