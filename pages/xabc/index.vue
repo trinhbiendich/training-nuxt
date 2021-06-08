@@ -1,13 +1,12 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-xs-12 col-md-4 col-lg-3">
-        <a class="menu-item" :href="'/xabc?basePath=' + path" v-for="path in paths">{{path}}</a>
-      </div>
-      <div class="col-xs-12 col-md-8 col-lg-9">
-        <div>{{totalLinks}} links in path <i>{{curPath}}</i> found {{totalImgs}} images</div>
+      <div class="col-xs-12 col-md-12 col-lg-12">
+        <div>found {{totalImgs}} images</div>
         <div id="myGallery">
-          <a v-for="img in imgs" :href="img" class="img-item"><img class="img-fluid lazy" :src="img" /></a>
+          <a v-for="obj in objs" target="_blank" :href="obj.page.url" :title="obj.page.title" class="img-item">
+            <img class="img-fluid lazy" :src="obj.url" />
+          </a>
         </div>
       </div>
     </div>
@@ -20,22 +19,13 @@ export default {
     return {
       paths: [],
       mystyle: {width: '0px'},
-      imgs: [],
-      totalLinks: 0,
-      curPath: '',
+      objs: {},
       totalImgs: 0,
       imgHeight: 300
     }
   },
   created() {
-    this.$axios.get('/td/paths')
-    .then(res => {
-      if (res.data.type !== 'success') {
-        return
-      }
-      this.paths = res.data.data
-        .filter((item, idx) => !this.isTest(item))
-    })
+
   },
   mounted() {
     this.imgHeight = 300
@@ -43,12 +33,31 @@ export default {
       this.imgHeight = 150
     }
 
-    let pathMatch = this.$route.query.basePath
-    if (pathMatch == undefined) {
-      return
-    }
+    this.$axios.get('/td')
+      .then(res => {
+        if (res.data.type !== 'success') {
+          return
+        }
+        this.objs = this.shuffle(Object.values(res.data.data));
+        this.totalImgs = this.objs.length;
 
-    this.loadData(pathMatch)
+        this.$nextTick(() => {
+          $('#myGallery').justifiedGallery({
+            rowHeight : this.imgHeight,
+            lastRow : 'nojustify',
+            margins : 3
+          }).on('jg.complete', function () {
+            // $(this).find('a').colorbox({
+            //   maxWidth : '80%',
+            //   maxHeight : '80%',
+            //   opacity : 0.8,
+            //   transition : 'elastic',
+            //   current : ''
+            // })
+          })
+        })
+      })
+
   },
   computed: {
     isMobile() {
@@ -60,9 +69,6 @@ export default {
     },
   },
   methods: {
-    isTest (item) {
-      return ['test', 'test2'].indexOf(item) >= 0
-    },
     shuffle(array) {
       let currentIndex = array.length, temporaryValue, randomIndex;
       while (0 !== currentIndex) {
@@ -73,82 +79,6 @@ export default {
         array[randomIndex] = temporaryValue;
       }
       return array;
-    },
-    saveItem (res) {
-      if (res.type !== 'success') {
-        return
-      }
-      const itemData = res.data
-      if (itemData === undefined || itemData === null) {
-        return
-      }
-      if (itemData.imgs === undefined || itemData.imgs === null || itemData.imgs.length === 0) {
-        return
-      }
-      for(let imgIdx=0; imgIdx < itemData.imgs.length; imgIdx++) {
-        let imgUrl = itemData.imgs[imgIdx]
-        if (this.imgs.indexOf(imgUrl) < 0) {
-          this.imgs.push(imgUrl)
-          this.totalImgs++
-        }
-      }
-    },
-    loadData (base_path) {
-      this.curPath = base_path
-      this.totallinks = 0
-      this.totalImgs = 0
-
-      this.$axios.$get(`/${base_path}`)
-      .then(data => {
-        if ( data.type !== 'success' ) {
-          return
-        }
-
-        let keys = []
-        let totalDone = 0
-
-        for(let k in data.data) {
-          if (k === 'links') {
-            continue
-          }
-          keys.push(k)
-          this.totallinks++;
-        }
-        keys = this.shuffle(keys)
-        if (keys.length >= 20) {
-          keys = keys.slice(0, 20)
-        }
-
-        keys.map((keyValue, idx) => {
-          this.$axios.$get(`/${base_path}_${keyValue}`)
-            .then(res => {
-              totalDone++
-              this.saveItem(res)
-
-              if (totalDone >= keys.length) {
-                this.$nextTick(() => {
-                  $('#myGallery').justifiedGallery({
-                    rowHeight : this.imgHeight,
-                    lastRow : 'nojustify',
-                    margins : 3
-                  }).on('jg.complete', function () {
-                    $(this).find('a').colorbox({
-                      maxWidth : '80%',
-                      maxHeight : '80%',
-                      opacity : 0.8,
-                      transition : 'elastic',
-                      current : ''
-                    })
-                  })
-                })
-              }
-
-            })
-        })
-
-      })
-
-
     },
   }
 }
