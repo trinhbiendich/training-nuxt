@@ -89,7 +89,6 @@ export default {
       enabled: true,
       offline: true,
       offlineStrategy: 'NetworkFirst',
-      offlineAssets: '_nuxt/*'
     }
   },
 
