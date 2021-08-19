@@ -1,3 +1,6 @@
+import path from 'path'
+import fs from 'fs'
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -75,6 +78,21 @@ export default {
   css: [
   ],
 
+  pwa: {
+    icons: {
+      purpose: 'maskable',
+      source: '/assets/icons/android-chrome-192x192.png',
+      fileName: 'android-chrome-192x192.png',
+      sizes: [129],
+    },
+    workbox: {
+      enabled: true,
+      offline: true,
+      offlineStrategy: 'NetworkFirst',
+      offlineAssets: '_nuxt/*'
+    }
+  },
+
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/axios',
@@ -92,6 +110,7 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/pwa',
   ],
 
   publicRuntimeConfig: {
@@ -115,7 +134,11 @@ export default {
   },
 
   server: {
-    port: 6969
+    port: 6969,
+    // https: {
+    //   key: fs.readFileSync(path.resolve(__dirname, 'localhost.key')),
+    //   cert: fs.readFileSync(path.resolve(__dirname, 'localhost.crt'))
+    // }
   },
 
   ssr: false,
