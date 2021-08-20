@@ -47,7 +47,6 @@ export default {
   methods: {
     async initFinalImages() {
       const imgs = await this.$localforage.images.keys()
-      console.log('imgs', imgs)
       let tmpImgs = [];
       for (let i=0; i<imgs.length; i++) {
         let obj = await this.$localforage.images.getItem(imgs[i]);
