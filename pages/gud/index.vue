@@ -5,6 +5,9 @@
       <i class="fa fa-spinner fa-spin" :class="{'hidden': onLoading2}"></i>
       <span v-if="msg" v-text="msg"></span>
     </a>
+    <a href="?year=2019" class="btn" :class="{'btn-success': $route.query.year == 2019, 'btn-primary': $route.query.year != 2019}">2019</a>
+    <a href="?year=2020" class="btn" :class="{'btn-success': $route.query.year == 2020, 'btn-primary': $route.query.year != 2020}">2020</a>
+    <a href="?year=2021" class="btn" :class="{'btn-success': $route.query.year == 2021, 'btn-primary': $route.query.year != 2021}">2021</a>
     <div id="myGallery">
       <a v-for="image in caching" :key="image" target="_blank" :href="image">
         <img class="img-fluid lazy" :src="image" />
