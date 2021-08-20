@@ -5,7 +5,10 @@
         <img class="img-fluid lazy" :src="image" />
       </a>
     </div>
-    <a class="btn btn-primary" href="javascript:;" @click="loadingImgs">Load more</a>
+    <a class="btn btn-primary" href="javascript:;" @click="loadingImgs">Load more
+      <i class="fa fa-spinner fa-spin" :class="{'hidden': onLoading}"></i>
+    </a>
+
   </div>
 </template>
 
@@ -15,6 +18,7 @@ export default {
     return {
       images: [],
       caching: [],
+      onLoading: false,
       testUrl: '',
     }
   },
@@ -37,16 +41,25 @@ export default {
       })
     },
     async nextItems () {
+      if (!this.images || this.images.length == 0) {
+        return
+      }
+      this.onLoading = true;
       let allImgs = [];
       for (let i=0; i < 100; i++) {
         allImgs.push(this.getImage(this.images.pop()));
       }
       const imgs = await Promise.all(allImgs)
+      this.onLoading = false;
       this.caching = [... this.caching, ...imgs]
     },
     async getImages () {
-      const e = await fetch('/jsons/urls.2021.json');
-      this.images = await e.json();
+      const e = await fetch(`/jsons/urls.${this.$route.params.id}.json`);
+      if (e.ok) {
+        this.images = await e.json();
+      } else {
+        this.images = []
+      }
     },
     async getImage(imgUrl) {
       let obj = await this.$localforage.images.getItem(imgUrl);
