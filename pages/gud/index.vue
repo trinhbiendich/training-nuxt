@@ -37,7 +37,9 @@ export default {
     }
   },
   mounted() {
-    this.initFinalImages();
+    this.initFinalImages().then(res => {
+      console.log("init final data done")
+    });
     this.getImages().then(res => {
       this.msg = `0/${this.images.length}`
     })
@@ -45,6 +47,7 @@ export default {
   methods: {
     async initFinalImages() {
       const imgs = await this.$localforage.images.keys()
+      console.log('imgs', imgs)
       let tmpImgs = [];
       for (let i=0; i<imgs.length; i++) {
         let obj = await this.$localforage.images.getItem(imgs[i]);
