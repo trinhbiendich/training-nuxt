@@ -9,9 +9,6 @@
         <b-nav-item-dropdown text="Harmonica">
           <b-dropdown-item :to="correctPath('harmonica', 'tremolo24')">Tremolo 24</b-dropdown-item>
           <b-dropdown-item :to="correctPath('harmonica', 'diatonic10')">Diatonic 10</b-dropdown-item>
-          <b-dropdown-item :to="correctPath('gud', '2021')">Gud 2021</b-dropdown-item>
-          <b-dropdown-item :to="correctPath('gud', '2020')">Gud 2020</b-dropdown-item>
-          <b-dropdown-item :to="correctPath('gud', '2019')">Gud 2019</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item :to="correctPath('images')">Images</b-nav-item>
@@ -32,9 +29,10 @@
           <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
         </b-nav-form>
 
-        <b-nav-item-dropdown text="Lang" right>
-          <b-dropdown-item href="#">EN</b-dropdown-item>
-          <b-dropdown-item href="#">ES</b-dropdown-item>
+        <b-nav-item-dropdown text="Gud" right>
+          <b-dropdown-item :to="correctPath('gud', '2021')">Gud 2021</b-dropdown-item>
+          <b-dropdown-item :to="correctPath('gud', '2020')">Gud 2020</b-dropdown-item>
+          <b-dropdown-item :to="correctPath('gud', '2019')">Gud 2019</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown right>
