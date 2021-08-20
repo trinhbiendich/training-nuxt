@@ -18,7 +18,7 @@ export default {
     return {
       images: [],
       caching: [],
-      onLoading: false,
+      onLoading: true,
       testUrl: '',
     }
   },
@@ -44,13 +44,13 @@ export default {
       if (!this.images || this.images.length == 0) {
         return
       }
-      this.onLoading = true;
+      this.onLoading = false;
       let allImgs = [];
       for (let i=0; i < 100; i++) {
         allImgs.push(this.getImage(this.images.pop()));
       }
       const imgs = await Promise.all(allImgs)
-      this.onLoading = false;
+      this.onLoading = true;
       this.caching = [... this.caching, ...imgs]
     },
     async getImages () {
