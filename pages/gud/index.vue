@@ -13,7 +13,7 @@
         <img class="img-fluid lazy" :src="image" />
       </a>
     </div>
-    <a v-if="finalImages.length > 0" class="btn btn-primary" href="javascript:;" @click="loadingImgs()">
+    <a class="btn btn-primary" href="javascript:;" @click="loadingImgs()">
       Load more (<span v-text="finalImages.length" /> images left)
       <i class="fa fa-spinner fa-spin" :class="{'hidden': onLoading}"></i>
     </a>
