@@ -28,6 +28,7 @@ export default {
   data () {
     return {
       images: [],
+      imageURlOnly: [],
       finalImages: [],
       caching: [],
       onLoading: true,
@@ -37,26 +38,16 @@ export default {
     }
   },
   mounted() {
-    this.initFinalImages().then(res => {
-      console.log("init final data done")
-    });
-    this.getImages().then(res => {
-      this.msg = `0/${this.images.length}`
-    })
+    this.init()
   },
   methods: {
-    async initFinalImages() {
+    async init () {
       const imgs = await this.$localforage.images.keys()
-      let tmpImgs = [];
-      for (let i=0; i<imgs.length; i++) {
-        let obj = await this.$localforage.images.getItem(imgs[i]);
-        if (obj.year !== this.$route.query.year) {
-          continue
-        }
-        tmpImgs.push(imgs[i])
-      }
-      this.finalImages = this.shuffle(tmpImgs)
-        //.filter(item => item.year === )
+      console.log("init final data done")
+      await this.getImages()
+      this.imageURlOnly = this.images.map(item => item.image_url)
+      console.log("init all image done")
+      this.finalImages = this.shuffle(imgs.filter(img => this.imageURlOnly.indexOf(img) < 0))
     },
     async downloadAllImages () {
       let jobs = [];
