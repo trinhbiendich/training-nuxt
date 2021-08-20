@@ -42,12 +42,13 @@ export default {
   },
   methods: {
     async init () {
-      const imgs = await this.$localforage.images.keys()
-      console.log("init final data done")
       await this.getImages()
       this.imageURlOnly = this.images.map(item => item.image_url)
       console.log("init all image done")
+      const imgs = await this.$localforage.images.keys()
+      console.log("init final data done")
       this.finalImages = this.shuffle(imgs.filter(img => this.imageURlOnly.indexOf(img) < 0))
+      this.msg = `${this.finalImages.length}/${this.images.length}`
     },
     async downloadAllImages () {
       let jobs = [];
