@@ -10,7 +10,7 @@
         <img class="img-fluid lazy" :src="image" />
       </a>
     </div>
-    <a class="btn btn-primary" href="javascript:;" @click="loadingImgs">Load more
+    <a class="btn btn-primary" href="javascript:;" @click="loadingImgs()">Load more
       <i class="fa fa-spinner fa-spin" :class="{'hidden': onLoading}"></i>
     </a>
     <a href="javascript:;" @click="scrollToTop()" class="btn btn-success">Go to Top <i class="fas fa-arrow-up"></i></a>
@@ -32,13 +32,14 @@ export default {
   },
   mounted() {
     this.getImages().then(res => {
-      this.loadingImgs()
+      this.msg = `0/${this.images.length}`
     })
   },
   methods: {
     async downloadAllImages () {
       let jobs = [];
       let doneIndx = 0;
+      this.onLoading2 = false;
       for (let i=0; i<this.images.length; i++) {
         jobs.push(this.getImage(this.images[i]))
         if (jobs.length >= 50) {
@@ -54,6 +55,7 @@ export default {
         this.msg = `${doneIndx}/${this.images.length}`
         jobs = []
       }
+      this.onLoading2 = true;
     },
     scrollToTop() {
       $("html, body").animate({ scrollTop: 0 }, "slow");
