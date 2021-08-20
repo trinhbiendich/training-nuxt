@@ -47,7 +47,7 @@ export default {
       let jobs = [];
       let doneIndx = 0;
       this.onLoading2 = false;
-      for (let i=0; i<this.images.length; i++) {
+      for (let i=this.images.length - 1; i > 0; i--) {
         jobs.push(this.getImage(this.images[i]))
         if (jobs.length >= 50) {
           let res = await Promise.all(jobs);
