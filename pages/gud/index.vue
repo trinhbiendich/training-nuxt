@@ -14,7 +14,7 @@
       </a>
     </div>
     <a class="btn btn-primary" href="javascript:;" @click="loadingImgs()">
-      Load more (<span v-text="finalImages.length" /> images left)
+      Load more (<span v-text="images.length" /> images left)
       <i class="fa fa-spinner fa-spin" :class="{'hidden': onLoading}"></i>
     </a>
     <a href="javascript:;" @click="scrollToTop()" class="btn btn-success">Go to Top <i class="fas fa-arrow-up"></i></a>
@@ -27,8 +27,6 @@ export default {
   data () {
     return {
       images: [],
-      imageURlOnly: [],
-      finalImages: [],
       caching: [],
       onLoading: true,
       onLoading2: true,
@@ -42,12 +40,8 @@ export default {
   methods: {
     async init () {
       await this.getImages()
-      this.imageURlOnly = this.images.map(item => item.image_url)
       console.log("init all image done")
-      const imgs = await this.$localforage.images.keys()
-      console.log("init final data done")
-      this.finalImages = this.shuffle(imgs.filter(img => this.imageURlOnly.indexOf(img) < 0))
-      this.msg = `${this.finalImages.length}/${this.images.length}`
+      this.msg = `0/${this.images.length}`
     },
     async downloadAllImages () {
       let jobs = [];
@@ -86,13 +80,13 @@ export default {
       })
     },
     async nextItems () {
-      if (!this.finalImages || this.finalImages.length === 0) {
+      if (!this.images || this.images.length === 0) {
         return
       }
       this.onLoading = false;
       let allImgs = [];
       for (let i=0; i < 100; i++) {
-        allImgs.push(this.getImage({image_url: this.finalImages.pop(), image_date: null}));
+        allImgs.push(this.getImage(this.images.pop()));
       }
       const imgs = await Promise.all(allImgs)
       this.onLoading = true;
@@ -103,10 +97,9 @@ export default {
         this.images = [];
         return
       }
-      const e = await fetch(`/jsons/${this.$route.query.year}.json`);
+      const e = await fetch(`/jsons/urls.${this.$route.query.year}.json`);
       if (e.ok) {
-        const imgs = await e.json();
-        this.images = this.shuffle(imgs)
+        this.images = await e.json();
       } else {
         this.images = []
       }
@@ -122,22 +115,21 @@ export default {
       }
       return array;
     },
-    async getImage(img) {
-      let obj = await this.$localforage.images.getItem(img.image_url);
+    async getImage(imgUrl) {
+      let obj = await this.$localforage.images.getItem(imgUrl);
       if (obj != null) {
         return this.imgUrlFromBytes(obj);
       }
-      const e = await fetch('https://cdn.bolacmuito.xyz/ximg.php?url=' + img.image_url);
+      const e = await fetch('https://cdn.bolacmuito.xyz/ximg.php?url=' + imgUrl);
       const a = await e.arrayBuffer();
       const s = e.headers.get("content-type");
       obj = {
         buffer: a,
         bufferType: s,
-        date: img.image_date,
         year: this.$route.query.year,
-        path: img.image_url,
+        path: imgUrl,
       }
-      await this.$localforage.images.setItem(img.image_url, obj)
+      await this.$localforage.images.setItem(imgUrl, obj)
       return this.imgUrlFromBytes(obj);
     },
     imgUrlFromBytes (obj) {
