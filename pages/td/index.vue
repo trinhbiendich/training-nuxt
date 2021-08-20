@@ -58,11 +58,11 @@ export default {
       }
       this.onLoading = false;
       let imgs = [];
-      for (let i=0; i < 100; i++) {
+      for (let i=0; i < 500; i++) {
         imgs.push(this.images.pop());
       }
       this.onLoading = true;
-      this.caching = [... this.caching, ...imgs]
+      this.caching = imgs
     },
     async getImages () {
       if (!this.$route.query.year) {

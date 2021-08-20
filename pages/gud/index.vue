@@ -84,13 +84,23 @@ export default {
         return
       }
       this.onLoading = false;
-      let allImgs = [];
-      for (let i=0; i < 100; i++) {
-        allImgs.push(this.getImage(this.images.pop()));
+      let imgJobs = [];
+      let imgs = [];
+      for (let i=0; i < 500; i++) {
+        imgJobs.push(this.getImage(this.images.pop()));
+        if (imgJobs.length >= 20) {
+          const tmp = await Promise.all(imgJobs)
+          imgs = [...imgs, ...tmp]
+          imgJobs = []
+        }
       }
-      const imgs = await Promise.all(allImgs)
+      if (imgJobs.length > 0) {
+        const tmp = await Promise.all(imgJobs)
+        imgs = [...imgs, ...tmp]
+        imgJobs = []
+      }
       this.onLoading = true;
-      this.caching = [... this.caching, ...imgs]
+      this.caching = imgs
     },
     async getImages () {
       if (!this.$route.query.year) {
