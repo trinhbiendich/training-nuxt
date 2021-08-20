@@ -1,5 +1,10 @@
 <template>
   <div>
+    <a @click="downloadAllImages()" href="javascript:;" class="btn btn-primary">Download all
+      <i class="fa fa-download"></i>
+      <i class="fa fa-spinner fa-spin" :class="{'hidden': onLoading2}"></i>
+      <span v-if="msg" v-text="msg"></span>
+    </a>
     <div id="myGallery">
       <a v-for="image in caching" :key="image" target="_blank" :href="image">
         <img class="img-fluid lazy" :src="image" />
@@ -20,7 +25,9 @@ export default {
       images: [],
       caching: [],
       onLoading: true,
+      onLoading2: true,
       testUrl: '',
+      msg: '',
     }
   },
   mounted() {
@@ -29,6 +36,25 @@ export default {
     })
   },
   methods: {
+    async downloadAllImages () {
+      let jobs = [];
+      let doneIndx = 0;
+      for (let i=0; i<this.images.length; i++) {
+        jobs.push(this.getImage(this.images[i]))
+        if (jobs.length >= 50) {
+          let res = await Promise.all(jobs);
+          doneIndx += jobs.length;
+          this.msg = `${doneIndx}/${this.images.length}`
+          jobs = []
+        }
+      }
+      if (jobs.length > 0) {
+        let res = await Promise.all(jobs);
+        doneIndx += jobs.length;
+        this.msg = `${doneIndx}/${this.images.length}`
+        jobs = []
+      }
+    },
     scrollToTop() {
       $("html, body").animate({ scrollTop: 0 }, "slow");
     },
