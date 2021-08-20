@@ -8,12 +8,13 @@
     <a class="btn btn-primary" href="javascript:;" @click="loadingImgs">Load more
       <i class="fa fa-spinner fa-spin" :class="{'hidden': onLoading}"></i>
     </a>
-
+    <a href="javascript:;" @click="scrollToTop()" class="btn btn-success">Go to Top <i class="fas fa-arrow-up"></i></a>
   </div>
 </template>
 
 <script>
 export default {
+  scrollToTop: true,
   data () {
     return {
       images: [],
@@ -28,6 +29,9 @@ export default {
     })
   },
   methods: {
+    scrollToTop() {
+      $("html, body").animate({ scrollTop: 0 }, "slow");
+    },
     async loadingImgs () {
       await this.nextItems();
       this.$nextTick(() => {
@@ -56,10 +60,22 @@ export default {
     async getImages () {
       const e = await fetch(`/jsons/urls.${this.$route.params.id}.json`);
       if (e.ok) {
-        this.images = await e.json();
+        const imgs = await e.json();
+        this.images = this.shuffle(imgs)
       } else {
         this.images = []
       }
+    },
+    shuffle(array) {
+      let currentIndex = array.length, temporaryValue, randomIndex;
+      while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+      return array;
     },
     async getImage(imgUrl) {
       let obj = await this.$localforage.images.getItem(imgUrl);
