@@ -2,7 +2,7 @@
   <div class="container">
     <button class="btn btn-success" @click="axiosPool">Test Request Pool</button>
     <div class="alert alert-info">{{ processed }} / {{ total }} in process {{ processing }}</div>
-    <h1>version 1.0</h1>
+    <h1>version 2.0</h1>
   </div>
 </template>
 
