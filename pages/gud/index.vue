@@ -10,7 +10,8 @@
         <img class="img-fluid lazy" :src="image" />
       </a>
     </div>
-    <a class="btn btn-primary" href="javascript:;" @click="loadingImgs()">Load more
+    <a v-if="finalImages.length > 0" class="btn btn-primary" href="javascript:;" @click="loadingImgs()">
+      Load more (<span v-text="finalImages.length" /> images left)
       <i class="fa fa-spinner fa-spin" :class="{'hidden': onLoading}"></i>
     </a>
     <a href="javascript:;" @click="scrollToTop()" class="btn btn-success">Go to Top <i class="fas fa-arrow-up"></i></a>
@@ -23,6 +24,7 @@ export default {
   data () {
     return {
       images: [],
+      finalImages: [],
       caching: [],
       onLoading: true,
       onLoading2: true,
@@ -31,11 +33,25 @@ export default {
     }
   },
   mounted() {
+    this.initFinalImages();
     this.getImages().then(res => {
       this.msg = `0/${this.images.length}`
     })
   },
   methods: {
+    async initFinalImages() {
+      const imgs = await this.$localforage.images.keys()
+      let tmpImgs = [];
+      for (let i=0; i<imgs.length; i++) {
+        let obj = await this.$localforage.images.getItem(imgs[i]);
+        if (obj.year !== this.$route.query.year) {
+          continue
+        }
+        tmpImgs.push(imgs[i])
+      }
+      this.finalImages = this.shuffle(tmpImgs)
+        //.filter(item => item.year === )
+    },
     async downloadAllImages () {
       let jobs = [];
       let doneIndx = 0;
@@ -73,20 +89,24 @@ export default {
       })
     },
     async nextItems () {
-      if (!this.images || this.images.length == 0) {
+      if (!this.finalImages || this.finalImages.length === 0) {
         return
       }
       this.onLoading = false;
       let allImgs = [];
       for (let i=0; i < 100; i++) {
-        allImgs.push(this.getImage(this.images.pop()));
+        allImgs.push(this.getImage({image_url: this.finalImages.pop(), image_date: null}));
       }
       const imgs = await Promise.all(allImgs)
       this.onLoading = true;
       this.caching = [... this.caching, ...imgs]
     },
     async getImages () {
-      const e = await fetch(`/jsons/urls.${this.$route.params.id}.json`);
+      if (!this.$route.query.year) {
+        this.images = [];
+        return
+      }
+      const e = await fetch(`/jsons/${this.$route.query.year}.json`);
       if (e.ok) {
         const imgs = await e.json();
         this.images = this.shuffle(imgs)
@@ -105,20 +125,22 @@ export default {
       }
       return array;
     },
-    async getImage(imgUrl) {
-      let obj = await this.$localforage.images.getItem(imgUrl);
+    async getImage(img) {
+      let obj = await this.$localforage.images.getItem(img.image_url);
       if (obj != null) {
         return this.imgUrlFromBytes(obj);
       }
-      const e = await fetch('https://cdn.bolacmuito.xyz/ximg.php?url=' + imgUrl);
+      const e = await fetch('https://cdn.bolacmuito.xyz/ximg.php?url=' + img.image_url);
       const a = await e.arrayBuffer();
       const s = e.headers.get("content-type");
       obj = {
         buffer: a,
         bufferType: s,
-        path: imgUrl,
+        date: img.image_date,
+        year: this.$route.query.year,
+        path: img.image_url,
       }
-      await this.$localforage.images.setItem(imgUrl, obj)
+      await this.$localforage.images.setItem(img.image_url, obj)
       return this.imgUrlFromBytes(obj);
     },
     imgUrlFromBytes (obj) {

@@ -30,9 +30,9 @@
         </b-nav-form>
 
         <b-nav-item-dropdown text="Gud" right>
-          <b-dropdown-item :to="correctPath('gud', '2021')">Gud 2021</b-dropdown-item>
-          <b-dropdown-item :to="correctPath('gud', '2020')">Gud 2020</b-dropdown-item>
-          <b-dropdown-item :to="correctPath('gud', '2019')">Gud 2019</b-dropdown-item>
+          <b-dropdown-item to="/gud?year=2021">Gud 2021</b-dropdown-item>
+          <b-dropdown-item to="/gud?year=2020">Gud 2020</b-dropdown-item>
+          <b-dropdown-item to="/gud?year=2019">Gud 2019</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown right>
