@@ -1,7 +1,6 @@
 <template>
   <div>
     <a @click="downloadAllImages()" href="javascript:;" class="btn btn-primary">
-      Download all
       <i class="fa fa-download"></i>
       <i class="fa fa-spinner fa-spin" :class="{'hidden': onLoading2}"></i>
       <span v-if="msg" v-text="msg"></span>
