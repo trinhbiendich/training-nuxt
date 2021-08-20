@@ -9,6 +9,9 @@
         <b-nav-item-dropdown text="Harmonica">
           <b-dropdown-item :to="correctPath('harmonica', 'tremolo24')">Tremolo 24</b-dropdown-item>
           <b-dropdown-item :to="correctPath('harmonica', 'diatonic10')">Diatonic 10</b-dropdown-item>
+          <b-dropdown-item :to="correctPath('gud', '2021')">Gud 2021</b-dropdown-item>
+          <b-dropdown-item :to="correctPath('gud', '2020')">Gud 2020</b-dropdown-item>
+          <b-dropdown-item :to="correctPath('gud', '2019')">Gud 2019</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item :to="correctPath('images')">Images</b-nav-item>

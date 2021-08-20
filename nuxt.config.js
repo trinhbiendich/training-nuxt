@@ -92,6 +92,16 @@ export default {
     }
   },
 
+  localforage: {
+    instances: [{
+      name: 'myApp',
+      storeName: 'images'
+    }, {
+      name: 'myApp',
+      storeName: 'fileSystem'
+    }]
+  },
+
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/axios',
@@ -110,6 +120,7 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
     '@nuxtjs/pwa',
+    '@nuxtjs/localforage',
   ],
 
   publicRuntimeConfig: {
@@ -126,6 +137,7 @@ export default {
     // Doc: https://github.com/nuxt-community/style-resources-module
     "@nuxtjs/style-resources",
     '@nuxtjs/axios',
+
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
@@ -134,10 +146,10 @@ export default {
 
   server: {
     port: 6969,
-    // https: {
-    //   key: fs.readFileSync(path.resolve(__dirname, 'localhost.key')),
-    //   cert: fs.readFileSync(path.resolve(__dirname, 'localhost.crt'))
-    // }
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, 'localhost.key')),
+      cert: fs.readFileSync(path.resolve(__dirname, 'localhost.crt'))
+    }
   },
 
   ssr: false,

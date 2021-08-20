@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="myGallery">
-      <a v-for="image in caching" :key="image" :href="image">
+      <a v-for="image in caching" :key="image" target="_blank" :href="image">
         <img class="img-fluid lazy" :src="image" />
       </a>
     </div>
@@ -10,25 +10,22 @@
 </template>
 
 <script>
-import logger from "@/server-middleware/logger";
-
 export default {
   data () {
     return {
       images: [],
       caching: [],
+      testUrl: '',
     }
   },
   mounted() {
-
     this.getImages().then(res => {
       this.loadingImgs()
-      console.log(this.getImage('https://cdn.bolacmuito.xyz/ximg.php?url=' + this.images[0]))
     })
   },
   methods: {
-    loadingImgs () {
-      this.nextItems();
+    async loadingImgs () {
+      await this.nextItems();
       this.$nextTick(() => {
         $('#myGallery').justifiedGallery({
           rowHeight: 300,
@@ -39,30 +36,38 @@ export default {
         })
       })
     },
-    nextItems () {
+    async nextItems () {
+      let allImgs = [];
       for (let i=0; i < 100; i++) {
-        this.caching.push(this.images.pop());
+        allImgs.push(this.getImage(this.images.pop()));
       }
+      const imgs = await Promise.all(allImgs)
+      this.caching = [... this.caching, ...imgs]
     },
     async getImages () {
       const e = await fetch('/jsons/urls.2021.json');
       this.images = await e.json();
     },
-    async getImage(t) {
-      const e = await fetch(t, {
-        cache: "no-store",
-        headers: {
-          Origin: "https://cuutruyen.net",
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache"
-        }
-      });
+    async getImage(imgUrl) {
+      let obj = await this.$localforage.images.getItem(imgUrl);
+      if (obj != null) {
+        return this.imgUrlFromBytes(obj);
+      }
+      const e = await fetch('https://cdn.bolacmuito.xyz/ximg.php?url=' + imgUrl);
       const a = await e.arrayBuffer();
       const s = e.headers.get("content-type");
-      return {
+      obj = {
         buffer: a,
-        bufferType: s
+        bufferType: s,
+        path: imgUrl,
       }
+      await this.$localforage.images.setItem(imgUrl, obj)
+      return this.imgUrlFromBytes(obj);
+    },
+    imgUrlFromBytes (obj) {
+      return URL.createObjectURL(new Blob([obj.buffer], {
+        type: obj.bufferType
+      }));
     }
   }
 }
