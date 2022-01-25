@@ -84,7 +84,7 @@ export default {
         return;
       }
       this.onSearching = true
-      this.$axios.$get(`http://stock.bolacmuito.xyz/articles?page=${this.page}&q=${this.search}&limit=${this.limit}`).then(res => {
+      this.$axios.$get(`/articles?page=${this.page}&q=${this.search}&limit=${this.limit}`).then(res => {
         this.articles = res.data
         this.totalPage = res.totalPage
         this.onSearching = false

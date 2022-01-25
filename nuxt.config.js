@@ -125,8 +125,8 @@ export default {
 
   publicRuntimeConfig: {
     axios: {
-      baseURL: 'https://api.bolacmuito.xyz',
-      //baseURL: 'http://localhost:8765',
+      baseURL: 'http://stock.bolacmuito.xyz',
+      //baseURL: 'http://localhost:8888',
     },
   },
 
@@ -146,7 +146,7 @@ export default {
 
   server: {
     port: 6969,
-    https: {
+    https_: {
       key: fs.readFileSync(path.resolve(__dirname, 'localhost.key')),
       cert: fs.readFileSync(path.resolve(__dirname, 'localhost.crt'))
     }

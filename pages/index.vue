@@ -15,9 +15,21 @@ export default {
       article: null,
     }
   },
+  mounted() {
+    let path = this.$route.query.path
+    if (!path || path == '') {
+      return
+    }
+    this.$axios.$get(`/articles?articleId=${encodeURIComponent(path)}`).then(res => {
+      if (res != null) {
+        this.article = res
+      }
+    })
+  },
   methods: {
     onShow(article) {
       this.article = article
+      this.$router.push({path: '/', query: {path: article.id}});
     },
     onGoBack () {
       this.article = null
