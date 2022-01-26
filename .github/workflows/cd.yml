@@ -27,11 +27,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
 
-      - name: Run SSH command to update at server
-        uses: garygrossgarten/github-action-ssh@v0.6.3
-        with:
-          command: sh ~/update_code.sh
-          host: ${{ secrets.HOST_X }}
-          username: ${{ secrets.USERNAME_X }}
-          password: ${{ secrets.PASSWORD_X }}
+#      - name: Run SSH command to update at server
+#        uses: garygrossgarten/github-action-ssh@v0.6.3
+#        with:
+#          command: sh ~/update_code.sh
+#          host: ${{ secrets.HOST_X }}
+#          username: ${{ secrets.USERNAME_X }}
+#          password: ${{ secrets.PASSWORD_X }}
 

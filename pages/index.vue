@@ -29,7 +29,7 @@ export default {
   methods: {
     onShow(article) {
       this.article = article
-      this.$router.push({path: '/', query: {path: article.id}});
+      this.$router.push({path: '/', query: {path: article.path}});
     },
     onGoBack () {
       this.article = null
