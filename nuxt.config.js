@@ -125,8 +125,8 @@ export default {
 
   publicRuntimeConfig: {
     axios: {
-      //baseURL: 'http://stock.bolacmuito.xyz',
-      baseURL: 'http://localhost:8888',
+      baseURL: 'http://stock.bolacmuito.xyz',
+      //baseURL: 'http://localhost:8888',
     },
   },
 
