@@ -20,7 +20,7 @@ export default {
     if (!path || path == '') {
       return
     }
-    this.$axios.$get(`/articles?articleId=${encodeURIComponent(path)}`).then(res => {
+    this.$axios.$get(`/articles?path=${encodeURIComponent(path)}`).then(res => {
       if (res != null) {
         this.article = res
       }
