@@ -1,9 +1,22 @@
 <template>
   <div>
-    <input @change="fetchData()"
-           placeholder="Gõ từ khoá hoặc mã chứng khoán để tìm kiếm, ví dụ VCB, VIX....."
-           v-on:keyup.enter="fetchData()"
-           v-model="search" class="form-control">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <div class="input-group-text">
+          <input type="checkbox" aria-label="Checkbox for following text input">
+          <span class="ml-1">BCTC</span>
+        </div>
+      </div>
+      <input type="text" class="form-control"
+             @change="fetchData()"
+             placeholder="Gõ từ khoá hoặc mã chứng khoán để tìm kiếm, ví dụ VCB, VIX....."
+             v-on:keyup.enter="fetchData()"
+             v-model="search"
+             aria-label="Recipient's username" aria-describedby="basic-addon2">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button">Tìm <i class="fa fa-search"></i></button>
+      </div>
+    </div>
     <div v-show="onSearching" class="loading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>
     <div class="news-item mt-3 mb-3 ml-4" v-for="article in articles" :key="article.id">
       <span class="mr-3">[{{article.strDateTime}}]</span>
