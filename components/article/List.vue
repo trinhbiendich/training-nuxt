@@ -20,7 +20,7 @@
     <div v-show="onSearching" class="loading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>
     <div class="news-item mt-3 mb-3 ml-4" v-for="article in articles" :key="article.id">
       <span class="mr-3">[{{article.strDateTime}}]</span>
-      <a href="javascript:;" @click="$emit('showDetail', article)">{{article.title}}</a>
+      <a :title="article.title" :href="correctPath(article.path)" >{{article.title}}</a>
       <hr/>
     </div>
 
@@ -69,6 +69,9 @@ export default {
   methods: {
     showInfo (article) {
       this.showModal = true
+    },
+    correctPath(path) {
+      return `/bai-viet${path}`
     },
     range(start, end) {
       return Array(end - start + 1).fill().map((_, idx) => start + idx)

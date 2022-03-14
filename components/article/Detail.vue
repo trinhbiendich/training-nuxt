@@ -1,6 +1,6 @@
 <template>
   <div >
-    <a class="btn btn-outline-primary mt-3 mb-3" @click="$emit('goback')" >Quay lại <i class="fa fa-reply-all"></i></a>
+    <a class="btn btn-outline-primary mt-3 mb-3" href="/" >Quay lại <i class="fa fa-reply-all"></i></a>
     <hr />
     <h3 class="title mb-4">{{article.title}}</h3>
     <div v-html="article.fullDesc"></div>
