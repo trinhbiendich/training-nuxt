@@ -157,6 +157,10 @@ export default {
   router: {
     //base: '/training-nuxt/',
     extendRoutes(routes, resolve) {
+      routes.push({
+        path: '/bai-viet/*',
+        component: resolve(__dirname, 'pages/baiviet/index')
+      })
       // routes.push({
       //   path: '/harmonica',
       //   component: resolve(__dirname, 'pages/index')
@@ -169,7 +173,7 @@ export default {
   },
 
   sitemap: {
-    hostname: 'https://example.com',
+    hostname: 'http://bolacmuito.xyz',
     gzip: true,
   },
 
