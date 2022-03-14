@@ -30,10 +30,11 @@ export default {
   methods: {
     onShow(article) {
       this.article = article
-      this.$router.push({path: '/', query: {path: article.path}});
+      this.$router.push({path: `/bai-viet${article.path}`});
     },
     onGoBack () {
       this.article = null
+      this.$router.push({path: `/`});
     }
   }
 }
