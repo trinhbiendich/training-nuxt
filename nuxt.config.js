@@ -6,7 +6,7 @@ export default {
   head: {
     //title: 'training-nuxt',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'vi'
     },
     meta: [
       { charset: 'utf-8' },
@@ -138,7 +138,15 @@ export default {
     "@nuxtjs/style-resources",
     '@nuxtjs/axios',
 
+    '@nuxtjs/sitemap',
+    '@nuxtjs/google-analytics'
+
   ],
+
+  googleAnalytics: {
+    id: "{YOUR GOOGLE ANALYTICS ID}",
+    dev: false
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

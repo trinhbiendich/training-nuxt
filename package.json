@@ -27,6 +27,7 @@
     "vue-uuid": "^2.0.2"
   },
   "devDependencies": {
+    "@nuxt/types": "~2.14.0",
     "@nuxtjs/localforage": "^1.1.0",
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/tailwindcss": "^3.4.2",
