@@ -169,6 +169,11 @@ export default {
     }
   },
 
+  sitemap: {
+    hostname: 'https://example.com',
+    gzip: true,
+  },
+
   styleResources: {
     scss: "./assets/scss/*.scss"
   },
