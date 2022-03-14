@@ -106,7 +106,6 @@ export default {
   plugins: [
     '~/plugins/axios',
     '~/plugins/underscore',
-    '~/plugins/vue-gtag',
   ],
 
   static: {
