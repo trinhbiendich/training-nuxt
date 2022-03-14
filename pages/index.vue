@@ -20,6 +20,7 @@ export default {
     if (!path || path == '') {
       return
     }
+    console.log('DEBUG path', path)
     this.$axios.$get(`/articles?path=${encodeURIComponent(path)}`).then(res => {
       if (res != null) {
         this.article = res
