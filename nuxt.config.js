@@ -1,5 +1,6 @@
 import path from 'path'
 import fs from 'fs'
+const axios = require('axios')
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -175,6 +176,10 @@ export default {
   sitemap: {
     hostname: 'http://bolacmuito.xyz',
     gzip: true,
+    routes: async () => {
+      const { data } = await axios.get('http://stock.bolacmuito.xyz/articles')
+      return data.data.map((article) => `/bai-viet/${article.path}`)
+    }
   },
 
   styleResources: {

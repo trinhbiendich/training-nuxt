@@ -1,7 +1,9 @@
 <template>
   <div class="container mt-2">
     <ListArticle v-show="article == null" @showDetail="onShow"></ListArticle>
-    <article-detail v-if="article != null" :article="article" @goback="onGoBack" ></article-detail>
+    <article-detail v-if="article != null"
+                    :article="article"
+                    @goback="onGoBack" ></article-detail>
   </div>
 </template>
 
