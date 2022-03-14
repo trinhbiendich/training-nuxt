@@ -2,4 +2,4 @@ RewriteEngine on
 RewriteBase /
 
 
-RewriteRule ^bai-viet(.*)$ /?path=$1
+RewriteRule ^/bai-viet(.*)$ /?path=$1
