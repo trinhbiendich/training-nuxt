@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[15],{323:function(e,t,n){"use strict";n.r(t);var r={name:"all-user"},c=n(49),component=Object(c.a)(r,(function(){var e=this.$createElement;return(this._self._c||e)("h1",[this._v("List users")])}),[],!1,null,"6cb75fad",null);t.default=component.exports}}]);
