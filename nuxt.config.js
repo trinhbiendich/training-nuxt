@@ -126,7 +126,7 @@ export default {
 
   publicRuntimeConfig: {
     axios: {
-      baseURL: 'http://stock.bolacmuito.xyz',
+      baseURL: 'https://stock.bolacmuito.xyz',
       //baseURL: 'http://localhost:8888',
     },
   },
@@ -174,10 +174,10 @@ export default {
   },
 
   sitemap: {
-    hostname: 'http://bolacmuito.xyz',
+    hostname: 'https://bolacmuito.xyz',
     gzip: true,
     routes: async () => {
-      const { data } = await axios.get('http://stock.bolacmuito.xyz/articles')
+      const { data } = await axios.get('https://stock.bolacmuito.xyz/articles')
       return data.data.map((article) => `/bai-viet/${article.path}`)
     }
   },
